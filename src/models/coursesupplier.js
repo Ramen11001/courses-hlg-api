@@ -72,15 +72,15 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
       },
       social_media: {
-        type: DataTypes.JSONB,
-        defaultValue: {
-          facebook: null,
-          instagram: null,
-          twitter: null,
-          linkedin: null,
-          youtube: null,
-          tiktok: null,
-        },
+        type: DataTypes.ARRAY(DataTypes.JSONB),
+        defaultValue: [
+          { name: "facebook", link: null, enabled: false },
+          { name: "instagram", link: null, enabled: false },
+          { name: "twitter", link: null, enabled: false },
+          { name: "linkedin", link: null, enabled: false },
+          { name: "youtube", link: null, enabled: false },
+          { name: "tiktok", link: null, enabled: false },
+        ],
       },
     },
     {

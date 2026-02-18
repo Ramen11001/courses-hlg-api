@@ -44,7 +44,7 @@ module.exports = {
       },
     ];
 
-    await queryInterface.bulkInsert("users", users);
+    await queryInterface.bulkInsert("Users", users);
   },
 
   async down(queryInterface, Sequelize) {
