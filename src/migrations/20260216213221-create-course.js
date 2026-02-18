@@ -14,11 +14,11 @@ module.exports = {
         allowNull: false,
       },
       description: {
-        type: Sequelize.STRING,
+        type: Sequelize.STRING(1000),
         allowNull: false,
       },
       study_plan: {
-        type: Sequelize.STRING,
+        type: Sequelize.TEXT,
         allowNull: false,
       },
       location: {
@@ -29,7 +29,8 @@ module.exports = {
         allowNull: false,
       },
       certificate: {
-        type: Sequelize.ENUM,
+        type: Sequelize.ENUM("sí", "no"),
+        defaultValue: "sí",
         allowNull: false,
       },
       tags: {
@@ -37,7 +38,8 @@ module.exports = {
         defaultValue: [],
       },
       duration: {
-        type: Sequelize.ARRAY,
+        type: Sequelize.ENUM("horas", "días", "semanas", "meses"),
+        defaultValue: "horas",
         allowNull: false,
       },
       createdAt: {

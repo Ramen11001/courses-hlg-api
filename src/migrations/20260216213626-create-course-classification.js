@@ -10,15 +10,26 @@ module.exports = {
         type: Sequelize.INTEGER,
       },
       area: {
-        type: Sequelize.ENUM,
+        type: Sequelize.ENUM(
+          "Técnica",
+          "Humanidades",
+          "Salud",
+          "Administración",
+          "Deporte",
+          "Belleza",
+          "Artes",
+          "Ciencias",
+        ),
         allowNull: false,
       },
       level: {
-        type: Sequelize.ENUM,
+        type: Sequelize.ENUM("Presencial", "Online", "Híbrida"),
+        defaultValue: "Presencial",
         allowNull: false,
       },
       mode: {
-        type: Sequelize.ENUM,
+        type: Sequelize.ENUM("bajo", "medio", "alto"),
+        defaultValue: "medio",
         allowNull: false,
       },
       createdAt: {

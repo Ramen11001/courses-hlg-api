@@ -2,7 +2,7 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable("CourseSuppliers", {
+    await queryInterface.createTable("courseSuppliers", {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -40,10 +40,11 @@ module.exports = {
         allowNull: false,
       },
       role: {
-        type: Sequelize.STRING,
+        type: Sequelize.ENUM("COURSE_SUPPLIER", "USER", "ADMINISTRADOR"),
+        defaultValue: "USER",
       },
       biography: {
-        type: Sequelize.STRING,
+        type: Sequelize.TEXT,
         allowNull: false,
       },
       rating: {
@@ -54,12 +55,12 @@ module.exports = {
         allowNull: false,
       },
       entity_type: {
-        type: Sequelize.ENUM,
-        allowNull: false,
+        type: Sequelize.ENUM("estatal", "privado"),
         defaultValue: "estatal",
+        allowNull: false,
       },
       social_media: {
-        type: Sequelize.JSON,
+        type: Sequelize.JSONB,
         defaultValue: {
           facebook: null,
           instagram: null,
