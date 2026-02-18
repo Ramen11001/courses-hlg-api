@@ -57,17 +57,6 @@ module.exports = {
         defaultValue: "estatal",
         allowNull: false,
       },
-      social_media: {
-        type: Sequelize.ARRAY(DataTypes.JSONB),
-        defaultValue: [
-          { name: "facebook", link: null, enabled: false },
-          { name: "instagram", link: null, enabled: false },
-          { name: "twitter", link: null, enabled: false },
-          { name: "linkedin", link: null, enabled: false },
-          { name: "youtube", link: null, enabled: false },
-          { name: "tiktok", link: null, enabled: false },
-        ],
-      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,

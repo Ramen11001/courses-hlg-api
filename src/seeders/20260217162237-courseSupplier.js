@@ -19,14 +19,6 @@ module.exports = {
         rating: 3,
         location: "UHO Holguín",
         entity_type: "estatal",
-        social_media: {
-          facebook: null,
-          instagram: null,
-          twitter: null,
-          linkedin: null,
-          youtube: null,
-          tiktok: null,
-        },
         createdAt: new Date(),
         updatedAt: new Date(),
       },
@@ -43,14 +35,6 @@ module.exports = {
         rating: 5,
         location: "Joven Club",
         entity_type: "estatal",
-        social_media: [
-          { platform: "facebook", url: null },
-          { platform: "instagram", url: null },
-          { platform: "twitter", url: null },
-          { platform: "linkedin", url: null },
-          { platform: "youtube", url: null },
-          { platform: "tiktok", url: null },
-        ],
         createdAt: new Date(),
         updatedAt: new Date(),
       },
@@ -68,14 +52,6 @@ module.exports = {
         rating: 4,
         location: "Joven Club",
         entity_type: "privado",
-        social_media: [
-          { platform: "facebook", url: null },
-          { platform: "instagram", url: null },
-          { platform: "twitter", url: null },
-          { platform: "linkedin", url: null },
-          { platform: "youtube", url: null },
-          { platform: "tiktok", url: null },
-        ],
         createdAt: new Date(),
         updatedAt: new Date(),
       },
@@ -93,14 +69,6 @@ module.exports = {
         rating: 5,
         location: "Joven Club",
         entity_type: "privado",
-        social_media: [
-          { platform: "facebook", url: null },
-          { platform: "instagram", url: null },
-          { platform: "twitter", url: null },
-          { platform: "linkedin", url: null },
-          { platform: "youtube", url: null },
-          { platform: "tiktok", url: null },
-        ],
         createdAt: new Date(),
         updatedAt: new Date(),
       },
@@ -110,7 +78,13 @@ module.exports = {
   },
 
   async down(queryInterface, Sequelize) {
-    const emails = courseSuppliers.map((supplier) => supplier.email);
+    const emails = [
+      "jorgealejandro@email.com",
+      "susana@email.com",
+      "ricardo@email.com",
+      "jans@email.com",
+    ];
+
     await queryInterface.bulkDelete(
       "courseSupplier",
       {
