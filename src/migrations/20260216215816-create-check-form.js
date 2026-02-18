@@ -34,11 +34,13 @@ module.exports = {
         allowNull: false,
       },
       entity_type: {
-        type: Sequelize.ENUM,
+        type: Sequelize.ENUM("estatal", "privado"),
+        defaultValue: "estatal",
         allowNull: false,
       },
       certificate: {
-        type: Sequelize.ENUM,
+        type: Sequelize.ENUM("sí", "no"),
+        defaultValue: "sí",
         allowNull: false,
       },
       rating_porcent: {
