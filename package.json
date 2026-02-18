@@ -21,6 +21,14 @@
     "prettier": "^3.5.3",
     "sequelize-cli": "^6.6.3"
   },
+  "scripts": {
+    "start": "nodemon ./src/bin/www",
+    "sequelize": "sequelize",
+    "db:create": "yarn run sequelize db:create",
+    "db:migrate": "yarn run sequelize db:migrate",
+    "seed:run": "yarn run sequelize db:seed:all",
+    "db:delete": "yarn sequelize db:drop"
+  },
   "name": "courses-hlg-api",
   "version": "1.0.0",
   "main": "index.js",
