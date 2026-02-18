@@ -10,18 +10,19 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       CourseSupplier.hasMany(models.Notification);
     }
+    static associate(models) {
+      CourseSupplier.hasMany(models.Course);
+    }
   }
   CourseSupplier.init(
     {
       firstName: {
         type: DataTypes.STRING,
         allowNull: false,
-        unique: true,
       },
       lastName: {
         type: DataTypes.STRING,
         allowNull: false,
-        unique: true,
       },
       age: {
         type: DataTypes.INTEGER,
@@ -49,7 +50,7 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
       },
       biography: {
-        type: DataTypes.STRING,
+        type: DataTypes.TEXT,
       },
       rating: {
         type: DataTypes.INTEGER,
@@ -71,7 +72,7 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
       },
       social_media: {
-        type: DataTypes.JSON,
+        type: DataTypes.JSONB,
         defaultValue: {
           facebook: null,
           instagram: null,

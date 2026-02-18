@@ -47,7 +47,7 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
       },
 
-      // (Foreign Keys)
+      // (Foreign Keys) only cs
       course_supplier: {
         type: DataTypes.UUID,
         allowNull: false,
@@ -61,8 +61,8 @@ module.exports = (sequelize, DataTypes) => {
         defaultValue: [],
       },
       duration: {
-        type: DataTypes.ARRAY,
-        allowNull: false,
+        type: DataTypes.ENUM("horas", "días", "semanas", "meses"),
+        defaultValue: "horas",
       },
       certificate: {
         type: DataTypes.ENUM("sí", "no"),
@@ -73,7 +73,7 @@ module.exports = (sequelize, DataTypes) => {
     {
       sequelize,
       modelName: "Course",
-      tableName: "courses",
+      tableName: "course",
     },
   );
   return Course;
