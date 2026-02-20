@@ -9,6 +9,12 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER,
       },
+      course_id: {
+        allowNull: false,
+        autoIncrement: true,
+        foreignKey: true,
+        type: Sequelize.INTEGER,
+      },
       area: {
         type: Sequelize.ENUM(
           "Técnica",

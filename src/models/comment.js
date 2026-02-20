@@ -8,8 +8,10 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      Comment.hasMany(models.Comment, {
-        foreignKey: "parentId",
+      Comment.hasMany(models.Comment);
+
+      Comment.belongsTo(models.Comment, {
+        foreignKey: "parent_id",
         as: "replies",
         onDelete: "CASCADE",
       });
@@ -37,18 +39,18 @@ module.exports = (sequelize, DataTypes) => {
       },
       // Foreign Keys
       user_id: {
-        type: DataTypes.UUID,
+        type: DataTypes.INTEGER,
         allowNull: false,
         references: {
           model: "Users",
           key: "id",
         },
       },
-      parentId: {
-        type: DataTypes.UUID,
+      parent_id: {
+        type: DataTypes.INTEGER,
         allowNull: true,
         references: {
-          model: "Comments",
+          model: "Comment",
           key: "id",
         },
       },

@@ -9,6 +9,18 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER,
       },
+      user_id: {
+        allowNull: false,
+        autoIncrement: true,
+        foreignKey: true,
+        type: Sequelize.INTEGER,
+      },
+      comment_id: {
+        allowNull: false,
+        autoIncrement: true,
+        foreignKey: true,
+        type: Sequelize.INTEGER,
+      },
       content: {
         type: Sequelize.STRING,
         allowNull: false,

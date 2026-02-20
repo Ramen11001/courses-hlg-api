@@ -1,28 +1,28 @@
 "use strict";
+const { User } = require('../models');
 
 module.exports = {
   async up(queryInterface, Sequelize) {
     async function getCourseSupplierId() {
-      const idCourseSupplier = await CourseSupplier.findAll({
+      const idCourseSupplier = await User.findAll({
         attributes: ["id"],
       });
       return idCourseSupplier;
     }
-    const course_supplier_id = await getCourseSupplierId();
+    const user_id = await getCourseSupplierId();
     const courses = await queryInterface.sequelize.query(
       'SELECT id, title FROM "courses";',
     );
 
     const courseList = courses[0];
 
-    // Mapeamos, preguntar si está bien ;V
     const courseMap = {};
     courseList.forEach((course) => {
       courseMap[course.title] = course.id;
     });
     return queryInterface.bulkInsert("CourseClassification", [
       {
-        course_supplier: course_supplier_id[3].id,
+        course_supplier: user_id[3].id,
         area: "Técnica",
         mode: "Online",
         level: "alto",
@@ -31,7 +31,7 @@ module.exports = {
         updatedAt: new Date(),
       },
       {
-        course_supplier: course_supplier_id[1].id,
+        course_supplier: user_id[2].id,
         area: "Técnica",
         mode: "Híbrida",
         level: "alto",
@@ -41,7 +41,7 @@ module.exports = {
         updatedAt: new Date(),
       },
       {
-        course_supplier: course_supplier_id[2].id,
+        course_supplier: user_id[4].id,
         area: "Artes",
         mode: "Presencial",
         level: "medio",
@@ -50,7 +50,7 @@ module.exports = {
         updatedAt: new Date(),
       },
       {
-        course_supplier: course_supplier_id[1].id,
+        course_supplier: user_id[5].id,
         area: "Administración",
         mode: "Online",
         level: "bajo",
@@ -59,7 +59,7 @@ module.exports = {
         updatedAt: new Date(),
       },
       {
-        course_supplier: course_supplier_id[0].id,
+        course_supplier: user_id[3].id,
         area: "Técnica",
         mode: "Híbrida",
         level: "alto",
@@ -68,7 +68,7 @@ module.exports = {
         updatedAt: new Date(),
       },
       {
-        course_supplier: course_supplier_id[2].id,
+        course_supplier: user_id[4].id,
         area: "Técnica",
         mode: "Presencial",
         level: "medio",
@@ -78,7 +78,7 @@ module.exports = {
         updatedAt: new Date(),
       },
       {
-        course_supplier: course_supplier_id[3].id,
+        course_supplier: user_id[2].id,
         area: "Técnica",
         mode: "Online",
         level: "bajo",
@@ -87,7 +87,7 @@ module.exports = {
         updatedAt: new Date(),
       },
       {
-        course_supplier: course_supplier_id[0].id,
+        course_supplier: user_id[5].id,
         area: "Administración",
         mode: "Presencial",
         level: "medio",
