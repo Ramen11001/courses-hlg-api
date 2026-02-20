@@ -38,8 +38,8 @@ module.exports = {
         defaultValue: [],
       },
       duration: {
-        type: Sequelize.ENUM("horas", "días", "semanas", "meses"),
-        defaultValue: "horas",
+        type: Sequelize.JSON,
+        defaultValue: [],
         allowNull: false,
       },
       createdAt: {
