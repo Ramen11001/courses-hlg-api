@@ -8,15 +8,12 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      Course.belongsTo(models.CourseSupplier, {
+      Course.belongsTo(models.User, {
         onDelete: "CASCADE",
-        foreignKey: "courseSupplier_id",
+        foreignKey: "user_id",
       });
 
-      Course.hasOne(models.CourseClassification, {
-        onDelete: "CASCADE",
-        foreignKey: "course_id",
-      });
+      Course.hasOne(models.CourseClassification);
     }
   }
   Course.init(
@@ -48,25 +45,26 @@ module.exports = (sequelize, DataTypes) => {
       },
 
       // (Foreign Keys) only cs
-      course_supplier: {
+      user_id: {
         type: DataTypes.UUID,
         allowNull: false,
         references: {
-          model: "CurseSupplier",
+          model: "User",
           key: "id",
         },
       },
       tags: {
-        type: DataTypes.JSON,
+        type: DataTypes.JSONB,
         defaultValue: [],
       },
       duration: {
-        type: DataTypes.ENUM("horas", "días", "semanas", "meses"),
-        defaultValue: "horas",
+        type: DataTypes.JSONB,
+        defaultValue: [],
+
       },
       certificate: {
-        type: DataTypes.ENUM("sí", "no"),
-        defaultValue: "sí",
+        type: DataTypes.BOOLEAN,
+        defaultValue: false,
         allowNull: false,
       },
     },

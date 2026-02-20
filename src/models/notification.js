@@ -12,11 +12,6 @@ module.exports = (sequelize, DataTypes) => {
         onDelete: "CASCADE",
         foreignKey: "user_id",
       });
-
-      Notification.belongsTo(models.CurseSupplier, {
-        onDelete: "CASCADE",
-        foreignKey: "curseSupplier_id",
-      });
     }
   }
   Notification.init(
@@ -34,13 +29,6 @@ module.exports = (sequelize, DataTypes) => {
         defaultValue: false,
       },
       // Foreign Keys
-      course_supplier: {
-        type: DataTypes.UUID,
-        references: {
-          model: "Coursesupplier",
-          key: "id",
-        },
-      },
       user_id: {
         type: DataTypes.UUID,
         allowNull: false,

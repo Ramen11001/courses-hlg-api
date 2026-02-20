@@ -14,11 +14,6 @@ module.exports = (sequelize, DataTypes) => {
         onDelete: "CASCADE",
       });
 
-      Comment.belongsTo(models.Coursesupplier, {
-        foreignKey: "course_id",
-        onDelete: "CASCADE",
-      });
-
       Comment.belongsTo(models.User, {
         foreignKey: "user_id",
         onDelete: "CASCADE",
@@ -41,13 +36,6 @@ module.exports = (sequelize, DataTypes) => {
         },
       },
       // Foreign Keys
-      course_supplier_id: {
-        type: DataTypes.UUID,
-        references: {
-          model: "Coursesupplier",
-          key: "id",
-        },
-      },
       user_id: {
         type: DataTypes.UUID,
         allowNull: false,

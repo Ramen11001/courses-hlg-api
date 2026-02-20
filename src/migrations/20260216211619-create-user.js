@@ -23,7 +23,7 @@ module.exports = {
         type: Sequelize.INTEGER,
         allowNull: false,
       },
-      birthdaye: {
+      birthday: {
         type: Sequelize.DATE,
         allowNull: false,
       },
@@ -40,6 +40,19 @@ module.exports = {
       },
       role: {
         type: Sequelize.STRING,
+      },
+      biography: {
+        type: Sequelize.TEXT,
+      },
+      rating: {
+        type: Sequelize.INTEGER,
+      },
+      location: {
+        type: Sequelize.STRING,
+      },
+      entity_type: {
+        type: Sequelize.ENUM("privado", "estatal"),
+        defaultValue: "estatal",
       },
       createdAt: {
         allowNull: false,
