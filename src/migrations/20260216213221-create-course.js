@@ -9,6 +9,12 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER,
       },
+      user_id: {
+        allowNull: false,
+        autoIncrement: true,
+        foreignKey: true,
+        type: Sequelize.INTEGER,
+      },
       title: {
         type: Sequelize.STRING,
         allowNull: false,
@@ -29,8 +35,8 @@ module.exports = {
         allowNull: false,
       },
       certificate: {
-        type: Sequelize.ENUM("sí", "no"),
-        defaultValue: "sí",
+        type: Sequelize.BOOLEAN,
+        defaultValue: false,
         allowNull: false,
       },
       tags: {
@@ -38,8 +44,8 @@ module.exports = {
         defaultValue: [],
       },
       duration: {
-        type: Sequelize.ENUM("horas", "días", "semanas", "meses"),
-        defaultValue: "horas",
+        type: Sequelize.JSON,
+        defaultValue: [],
         allowNull: false,
       },
       createdAt: {

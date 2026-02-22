@@ -8,27 +8,23 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      Role.belongsToMany(models.Permission, {
-        through: "role_permissions",
+      Role.belongsTo(models.User, {
+        onDelete: "CASCADE",
+        foreignKey: "user_id",
       });
-    }
-
-    static getSearchAttributes() {
-      return ["name"];
     }
   }
   Role.init(
     {
-      name: {
+      role: {
         type: DataTypes.STRING,
-        allowNull: false,
-        unique: true,
       },
       // Foreign Keys
-      permissions: {
-        type: DataTypes.UUID,
+      user_id: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
         references: {
-          model: "Permission",
+          model: "Users",
           key: "id",
         },
       },
@@ -36,8 +32,7 @@ module.exports = (sequelize, DataTypes) => {
     {
       sequelize,
       modelName: "Role",
-      tableName: "roles",
-      underscored: true,
+      tableName: "role",
     },
   );
   return Role;

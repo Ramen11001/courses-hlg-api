@@ -8,14 +8,11 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      Comment.hasMany(models.Comment, {
-        foreignKey: "parentId",
-        as: "replies",
-        onDelete: "CASCADE",
-      });
+      Comment.hasMany(models.Comment);
 
-      Comment.belongsTo(models.Coursesupplier, {
-        foreignKey: "course_id",
+      Comment.belongsTo(models.Comment, {
+        foreignKey: "parent_id",
+        as: "replies",
         onDelete: "CASCADE",
       });
 
@@ -41,26 +38,11 @@ module.exports = (sequelize, DataTypes) => {
         },
       },
       // Foreign Keys
-      course_supplier_id: {
-        type: DataTypes.UUID,
-        references: {
-          model: "Coursesupplier",
-          key: "id",
-        },
-      },
       user_id: {
-        type: DataTypes.UUID,
+        type: DataTypes.INTEGER,
         allowNull: false,
         references: {
           model: "Users",
-          key: "id",
-        },
-      },
-      parentId: {
-        type: DataTypes.UUID,
-        allowNull: true,
-        references: {
-          model: "Comments",
           key: "id",
         },
       },

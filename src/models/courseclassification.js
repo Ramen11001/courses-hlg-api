@@ -41,8 +41,8 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
       },
       // Foreign Keys
-      courses: {
-        type: DataTypes.UUID,
+      course_id: {
+        type: DataTypes.INTEGER,
         references: {
           model: "Course",
           key: "id",
