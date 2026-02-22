@@ -1,28 +1,22 @@
 "use strict";
 
-const { JSONB } = require('sequelize');
-const User = require('../models');
-
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    //User
-    // async function getUserId() {
-    //   const idUser = await User.findAll({
-    //     attributes: ['id'],
-    //   });
-    //   return idUser
-    // }
-    // const userid = await getUserId();
-
-    const userid = await queryInterface.sequelize.query(
+    // Get user id with queryInterface
+    const users = await queryInterface.sequelize.query(
       'SELECT id FROM "Users";',
+      { type: queryInterface.sequelize.QueryTypes.SELECT },
     );
+    // validator.
+    if (users.length === 0) {
+      throw new Error(
+        "No hay usuarios en la base de datos. Ejecuta primero el seed de usuarios.",
+      );
+    }
 
-    return queryInterface.bulkInsert(
-      "Course",
-      course[
-      ({
+    const courses = [
+      {
         title: "Desarrollo Web Full Stack con JavaScript",
         description:
           "Aprende a crear aplicaciones web completas desde cero con Node.js, React y MongoDB. Incluye proyectos prácticos y mentorías personalizadas.",
@@ -30,17 +24,16 @@ module.exports = {
           "Módulo 1: Fundamentos de JavaScript\nMódulo 2: Backend con Node.js y Express\nMódulo 3: Frontend con React\nMódulo 4: Bases de datos con MongoDB\nMódulo 5: Despliegue y DevOps",
         location: "Joven Club",
         cost: 499.99,
-        user_id: userid[3].id,
-        tags: JSONB.stringify([
+        user_id: users[2]?.id,
+        tags: JSON.stringify([
           "JavaScript",
           "Node.js",
           "React",
           "MongoDB",
           "Full Stack",
         ]),
-        duration: [12, "semanas"],
-        certificate: "sí",
-
+        duration: JSON.stringify([12, "semanas"]),
+        certificate: true,
         createdAt: new Date(),
         updatedAt: new Date(),
       },
@@ -52,7 +45,7 @@ module.exports = {
           "Semana 1-2: Python básico\nSemana 3-4: NumPy y Pandas\nSemana 5-6: Visualización con Matplotlib\nSemana 7-8: Machine Learning con Scikit-learn\nSemana 9-10: Deep Learning con TensorFlow\nSemana 11-12: Proyecto final",
         location: "Joven Club",
         cost: 799.99,
-        user_id: userid[2].id,
+        user_id: users[3]?.id,
         tags: JSON.stringify([
           "Python",
           "Data Science",
@@ -60,8 +53,8 @@ module.exports = {
           "AI",
           "TensorFlow",
         ]),
-        duration: [22, "semanas"],
-        certificate: "sí",
+        duration: JSON.stringify([22, "semanas"]),
+        certificate: false,
         createdAt: new Date(),
         updatedAt: new Date(),
       },
@@ -73,10 +66,10 @@ module.exports = {
           "Módulo 1: Fundamentos de UX\nMódulo 2: Investigación de usuarios\nMódulo 3: Wireframing y prototipado\nMódulo 4: Diseño visual UI\nMódulo 5: Testing y iteración\nMódulo 6: Portfolio y casos de estudio",
         location: "Joven Club",
         cost: 649.5,
-        user_id: userid[4].id,
+        user_id: users[4]?.id,
         tags: JSON.stringify(["UX", "UI", "Diseño", "Figma", "Prototipado"]),
-        duration: [8, "semanas"],
-        certificate: "sí",
+        duration: JSON.stringify([8, "semanas"]),
+        certificate: true,
         createdAt: new Date(),
         updatedAt: new Date(),
       },
@@ -88,7 +81,7 @@ module.exports = {
           "Semana 1: Fundamentos de marketing digital\nSemana 2: SEO y contenido\nSemana 3: SEM y publicidad pagada\nSemana 4: Email marketing y automatización\nSemana 5: Growth hacking\nSemana 6: Analítica y KPIs",
         location: "UHO Holguín",
         cost: 399.99,
-        user_id: userid[5].id,
+        user_id: users[5]?.id,
         tags: JSON.stringify([
           "Marketing",
           "Growth Hacking",
@@ -96,8 +89,8 @@ module.exports = {
           "SEM",
           "Analítica",
         ]),
-        duration: [6, "semanas"],
-        certificate: "no",
+        duration: JSON.stringify([6, "semanas"]),
+        certificate: false,
         createdAt: new Date(),
         updatedAt: new Date(),
       },
@@ -109,7 +102,7 @@ module.exports = {
           "Módulo 1: Fundamentos DevOps\nMódulo 2: Docker y contenedores\nMódulo 3: Kubernetes\nMódulo 4: CI/CD con Jenkins\nMódulo 5: AWS Services\nMódulo 6: Infraestructura como código con Terraform",
         location: "UHO Holguín",
         cost: 899.99,
-        user_id: userid[3].id,
+        user_id: users[2]?.id,
         tags: JSON.stringify([
           "DevOps",
           "AWS",
@@ -117,8 +110,8 @@ module.exports = {
           "Kubernetes",
           "Cloud",
         ]),
-        duration: [10, "semanas"],
-        certificate: "sí",
+        duration: JSON.stringify([10, "semanas"]),
+        certificate: true,
         createdAt: new Date(),
         updatedAt: new Date(),
       },
@@ -130,7 +123,7 @@ module.exports = {
           "Semana 1-2: Fundamentos de React Native\nSemana 3-4: Navegación y estado\nSemana 5-6: APIs nativas y dispositivos\nSemana 7-8: UI/UX en móviles\nSemana 9-10: Testing y debugging\nSemana 11-12: Publicación y monetización",
         location: "UHO Holguín",
         cost: 549.99,
-        user_id: userid[4].id,
+        user_id: users[5]?.id,
         tags: JSON.stringify([
           "React Native",
           "Mobile",
@@ -138,8 +131,8 @@ module.exports = {
           "Android",
           "JavaScript",
         ]),
-        duration: [12, "semanas"],
-        certificate: "sí",
+        duration: JSON.stringify([12, "semanas"]),
+        certificate: false,
         createdAt: new Date(),
         updatedAt: new Date(),
       },
@@ -151,15 +144,15 @@ module.exports = {
           "Módulo 1: Fundamentos de seguridad\nMódulo 2: Criptografía básica\nMódulo 3: Seguridad en redes\nMódulo 4: Ethical hacking\nMódulo 5: Seguridad en aplicaciones web",
         location: "UHO Holguín",
         cost: 299.99,
-        user_id: userid[2].id,
+        user_id: users[3]?.id,
         tags: JSON.stringify([
           "Ciberseguridad",
           "Hacking Ético",
           "Redes",
           "Criptografía",
         ]),
-        duration: [8, "semanas"],
-        certificate: "sí",
+        duration: JSON.stringify([8, "semanas"]),
+        certificate: true,
         createdAt: new Date(),
         updatedAt: new Date(),
       },
@@ -171,7 +164,7 @@ module.exports = {
           "Módulo 1: Manifiesto Ágil\nMódulo 2: Scrum Framework\nMódulo 3: Kanban\nMódulo 4: Herramientas (Jira, Trello)\nMódulo 5: Liderazgo ágil\nMódulo 6: Preparación para certificación",
         location: "UHO Holguín",
         cost: 449.99,
-        user_id: userid[5].id,
+        user_id: users[4]?.id,
         tags: JSON.stringify([
           "Agile",
           "Scrum",
@@ -179,17 +172,17 @@ module.exports = {
           "Jira",
           "Project Management",
         ]),
-        duration: [6, "semanas"],
-        certificate: "sí",
+        duration: JSON.stringify([6, "semanas"]),
+        certificate: false,
         createdAt: new Date(),
         updatedAt: new Date(),
       },
-        (this.title = course.map((titleOfCourse) => titleOfCourse.title)))
-      ],
-    );
+    ];
+
+    return queryInterface.bulkInsert("Courses", courses);
   },
 
   async down(queryInterface, Sequelize) {
-    return queryInterface.bulkDelete("Courses", { title: this.title }, {});
+    return queryInterface.bulkDelete("Courses", null, {});
   },
 };

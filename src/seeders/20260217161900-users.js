@@ -9,7 +9,6 @@ module.exports = {
       {
         firstName: "Luis Daniel",
         lastName: "Tasis Pérez",
-        age: 30,
         birthday: new Date("1974-06-17"),
         email: "luisdaniel@email.com",
         phone: "+53 53-97-60-01",
@@ -22,7 +21,6 @@ module.exports = {
       {
         firstName: "Sabina Sonia",
         lastName: "Quesada Parera",
-        age: 27,
         birthday: new Date("1945-12-30"),
         email: "sonia@email.com",
         phone: "+53 55-67-81-90",
@@ -35,7 +33,6 @@ module.exports = {
       {
         firstName: "Jorge Alejandro",
         lastName: "Fernández Pérez",
-        age: 24,
         birthday: new Date("2001-01-11"),
         email: "jorgealejandro@email.com",
         phone: "+53 55-55-99-46",
@@ -52,7 +49,6 @@ module.exports = {
       {
         firstName: "Susana",
         lastName: "Hernández Parera",
-        age: 54,
         birthday: new Date("1971-07-09"),
         email: "susana@email.com",
         phone: "+53 54-94-35-44",
@@ -69,7 +65,6 @@ module.exports = {
       {
         firstName: "Ricardo Nicomedez",
         lastName: "Hernández Rodríguez",
-        age: 25,
         birthday: new Date("1945-10-15"),
         email: "ricardo@email.com",
         phone: "+53 55-34-67-98",
@@ -87,7 +82,6 @@ module.exports = {
       {
         firstName: "Jans",
         lastName: "Hernández Parera",
-        age: 29,
         birthday: new Date("1984-03-13"),
         email: "jans@email.com",
         phone: "+53 56-67-92-08",
@@ -105,7 +99,6 @@ module.exports = {
       {
         firstName: "Administrador",
         lastName: "Administrador",
-        age: 22,
         birthday: new Date("2004-03-30"),
         email: "admin@email.com",
         phone: "+53 55-55-91-47",

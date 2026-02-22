@@ -46,14 +46,6 @@ module.exports = (sequelize, DataTypes) => {
           key: "id",
         },
       },
-      parent_id: {
-        type: DataTypes.INTEGER,
-        allowNull: true,
-        references: {
-          model: "Comment",
-          key: "id",
-        },
-      },
     },
     {
       sequelize,

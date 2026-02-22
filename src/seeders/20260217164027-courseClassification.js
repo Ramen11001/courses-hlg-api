@@ -1,104 +1,111 @@
 "use strict";
-const { User } = require('../models');
 
+/** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    async function getCourseSupplierId() {
-      const idCourseSupplier = await User.findAll({
-        attributes: ["id"],
-      });
-      return idCourseSupplier;
-    }
-    const user_id = await getCourseSupplierId();
+    // Get courses id
     const courses = await queryInterface.sequelize.query(
-      'SELECT id, title FROM "courses";',
+      'SELECT id, title FROM "Courses";',
+      { type: queryInterface.sequelize.QueryTypes.SELECT },
     );
 
-    const courseList = courses[0];
+    if (courses.length === 0) {
+      throw new Error(
+        "No hay cursos en la base de datos. Ejecuta primero el seed de cursos.",
+      );
+    }
 
+    // Create course map by title
     const courseMap = {};
-    courseList.forEach((course) => {
+    courses.forEach((course) => {
       courseMap[course.title] = course.id;
     });
-    return queryInterface.bulkInsert("CourseClassification", [
+
+    const classifications = [
       {
-        course_supplier: user_id[3].id,
         area: "Técnica",
-        mode: "Online",
+        mode: "Híbrida",
         level: "alto",
-        courses: courseMap["Desarrollo Web Full Stack con JavaScript"],
+        course_id: courseMap["Desarrollo Web Full Stack con JavaScript"],
         createdAt: new Date(),
         updatedAt: new Date(),
       },
       {
-        course_supplier: user_id[2].id,
         area: "Técnica",
         mode: "Híbrida",
         level: "alto",
-        courses:
+        course_id:
           courseMap["Python para Ciencia de Datos e Inteligencia Artificial"],
         createdAt: new Date(),
         updatedAt: new Date(),
       },
       {
-        course_supplier: user_id[4].id,
         area: "Artes",
         mode: "Presencial",
         level: "medio",
-        courses: courseMap["Diseño UX/UI de Productos Digitales"],
+        course_id: courseMap["Diseño UX/UI de Productos Digitales"],
         createdAt: new Date(),
         updatedAt: new Date(),
       },
       {
-        course_supplier: user_id[5].id,
         area: "Administración",
-        mode: "Online",
+        mode: "Híbrida",
         level: "bajo",
-        courses: courseMap["Marketing Digital y Growth Hacking"],
+        course_id: courseMap["Marketing Digital y Growth Hacking"],
         createdAt: new Date(),
         updatedAt: new Date(),
       },
       {
-        course_supplier: user_id[3].id,
         area: "Técnica",
         mode: "Híbrida",
         level: "alto",
-        courses: courseMap["DevOps y Cloud Computing con AWS"],
+        course_id: courseMap["DevOps y Cloud Computing con AWS"],
         createdAt: new Date(),
         updatedAt: new Date(),
       },
       {
-        course_supplier: user_id[4].id,
         area: "Técnica",
         mode: "Presencial",
         level: "medio",
-        courses:
+        course_id:
           courseMap["Desarrollo de Aplicaciones Móviles con React Native"],
         createdAt: new Date(),
         updatedAt: new Date(),
       },
       {
-        course_supplier: user_id[2].id,
         area: "Técnica",
-        mode: "Online",
+        mode: "Híbrida",
         level: "bajo",
-        courses: courseMap["Introducción a la Ciberseguridad"],
+        course_id: courseMap["Introducción a la Ciberseguridad"],
         createdAt: new Date(),
         updatedAt: new Date(),
       },
       {
-        course_supplier: user_id[5].id,
         area: "Administración",
         mode: "Presencial",
         level: "medio",
-        courses: courseMap["Gestión de Proyectos con Metodologías Ágiles"],
+        course_id: courseMap["Gestión de Proyectos con Metodologías Ágiles"],
         createdAt: new Date(),
         updatedAt: new Date(),
       },
-    ]);
+    ];
+
+    // Verify that all course_ids exist
+    const validClassifications = classifications.filter(
+      (c) => c.course_id !== undefined,
+    );
+
+    if (validClassifications.length === 0) {
+      throw new Error("No se encontraron cursos con los títulos especificados");
+    }
+
+    return queryInterface.bulkInsert(
+      "CourseClassifications",
+      validClassifications,
+    );
   },
 
   async down(queryInterface, Sequelize) {
-    return queryInterface.bulkDelete("CourseClassification", null, {});
+    return queryInterface.bulkDelete("CourseClassifications", null, {});
   },
 };

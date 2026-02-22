@@ -11,18 +11,24 @@ module.exports = {
       },
       user_id: {
         allowNull: false,
-        autoIncrement: true,
-        foreignKey: true,
         type: Sequelize.INTEGER,
+        references: {
+          model: "Users",
+          key: "id",
+        },
+        onDelete: "CASCADE",
       },
-      comment_id: {
-        allowNull: false,
-        autoIncrement: true,
-        foreignKey: true,
+      parent_id: {
+        allowNull: true,
         type: Sequelize.INTEGER,
+        references: {
+          model: "Comments",
+          key: "id",
+        },
+        onDelete: "CASCADE",
       },
       content: {
-        type: Sequelize.STRING,
+        type: Sequelize.TEXT,
         allowNull: false,
       },
       createdAt: {
@@ -31,6 +37,10 @@ module.exports = {
       },
       updatedAt: {
         allowNull: false,
+        type: Sequelize.DATE,
+      },
+      deletedAt: {
+        allowNull: true,
         type: Sequelize.DATE,
       },
     });
