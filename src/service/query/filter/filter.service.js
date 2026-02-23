@@ -56,7 +56,6 @@ function filterPagination(req, res, next) {
   }
 
   // COURSE CLASSIFICATION FILTER
-
   // Area
   if (req.query.area) {
     const areasArray = req.query.area.split(',');
@@ -71,7 +70,6 @@ function filterPagination(req, res, next) {
     queryOptions.where.mode = {
       [Op.in]: modeArray
     }
-
   }
   //Level
   if (req.query.level) {
@@ -90,7 +88,6 @@ function filterPagination(req, res, next) {
           { firstName: { [Op.iLike]: `%${search}%` } },
           { lastName: { [Op.iLike]: `%${search}%` } },
           //TODO: The search should only be for course suppliers
-          { rating: { [Op.iLike]: `%${search}%` } },
         ],
       };
     }
