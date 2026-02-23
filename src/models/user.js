@@ -13,6 +13,10 @@ module.exports = (sequelize, DataTypes) => {
       User.hasOne(models.Course);
       User.hasOne(models.Role);
       User.hasOne(models.Rating);
+      User.belongsTo(models.User, {
+        onDelete: "CASCADE",
+        foreignKey: "provider_id",
+      });
     }
   }
   User.init(
@@ -49,6 +53,15 @@ module.exports = (sequelize, DataTypes) => {
       entity_type: {
         type: DataTypes.ENUM("privado", "estatal"),
         defaultValue: "estatal",
+      },
+      // Foreign Keys
+      provider_id: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        references: {
+          model: "Users",
+          key: "id",
+        },
       },
     },
     {
