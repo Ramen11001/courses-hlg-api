@@ -81,8 +81,6 @@ function filterPagination(req, res, next) {
     }
   }
 
-
-
   // USER FILTER:
   // Search configuration for users
   if (req.baseUrl == "/users") {
