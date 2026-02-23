@@ -9,7 +9,7 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       Comment.hasMany(models.Comment);
-
+      Comment.hasOne(models.Rating);
       Comment.belongsTo(models.Comment, {
         foreignKey: "parent_id",
         as: "replies",

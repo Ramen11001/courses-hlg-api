@@ -12,8 +12,6 @@ module.exports = (sequelize, DataTypes) => {
         onDelete: "CASCADE",
         foreignKey: "user_id",
       });
-
-      Course.hasOne(models.CourseClassification);
     }
   }
   Course.init(
@@ -43,16 +41,6 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.DOUBLE,
         allowNull: false,
       },
-
-      // (Foreign Keys) only cs
-      user_id: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-        references: {
-          model: "User",
-          key: "id",
-        },
-      },
       tags: {
         type: DataTypes.JSONB,
         defaultValue: [],
@@ -66,6 +54,38 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.BOOLEAN,
         defaultValue: false,
         allowNull: false,
+      },
+      area: {
+        type: DataTypes.ENUM(
+          "Técnica",
+          "Humanidades",
+          "Salud",
+          "Administración",
+          "Deporte",
+          "Belleza",
+          "Artes",
+          "Ciencias",
+        ),
+        allowNull: false,
+      },
+      mode: {
+        type: DataTypes.ENUM("Presencial", "Online", "Híbrida"),
+        defaultValue: "Presencial",
+        allowNull: false,
+      },
+      level: {
+        type: DataTypes.ENUM("bajo", "medio", "alto"),
+        defaultValue: "medio",
+        allowNull: false,
+      },
+      // (Foreign Keys)
+      user_id: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        references: {
+          model: "User",
+          key: "id",
+        },
       },
     },
     {
