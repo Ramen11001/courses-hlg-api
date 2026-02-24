@@ -4,10 +4,8 @@
  */
 
 export const messageValidator = {
-    DUPLICATE_USER_EMAIL: 'No puede tener direcciones de correo duplicadas',
-    DUPLICATE_USER_PHONES: 'No puede tener números de teléfono duplicados',
-    UNIQUE_EMAIL: 'Ya existe un usuario con ese correo',
-    UNIQUE_USERNAME: 'Ya existe un usuario con ese nombre',
-    VALIDITY_YEAR: 'Los años válidos tienen que ser mayor que cero',
-}
-
+  DUPLICATE_USER_EMAIL: "No puede tener direcciones de correo duplicadas",
+  DUPLICATE_USER_PHONES: "No puede tener números de teléfono duplicados",
+  VALIDITY_YEAR:
+    "Los usuarios deben tener más de 12 años. La fecha debe ser anterior al año 2014",
+};
