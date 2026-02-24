@@ -1,0 +1,11 @@
+/**
+ * This module holds message enum to return to the web client as messages.
+ * Constants must be both defined and exported in alphabetical order.
+ */
+
+export const messageValidator = {
+  DUPLICATE_USER_EMAIL: "No puede tener direcciones de correo duplicadas",
+  DUPLICATE_USER_PHONES: "No puede tener números de teléfono duplicados",
+  VALIDITY_YEAR:
+    "Los usuarios deben tener más de 12 años. La fecha debe ser anterior al año 2014",
+};

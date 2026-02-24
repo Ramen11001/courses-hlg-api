@@ -48,6 +48,29 @@ module.exports = {
         defaultValue: [],
         allowNull: false,
       },
+      area: {
+        type: Sequelize.ENUM(
+          "Técnica",
+          "Humanidades",
+          "Salud",
+          "Administración",
+          "Deporte",
+          "Belleza",
+          "Artes",
+          "Ciencias",
+        ),
+        allowNull: false,
+      },
+      mode: {
+        type: Sequelize.ENUM("Presencial", "Online", "Híbrida"),
+        defaultValue: "Presencial",
+        allowNull: false,
+      },
+      level: {
+        type: Sequelize.ENUM("bajo", "medio", "alto"),
+        defaultValue: "medio",
+        allowNull: false,
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,

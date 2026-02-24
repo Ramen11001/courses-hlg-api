@@ -9,7 +9,7 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       Comment.hasMany(models.Comment);
-
+      Comment.hasOne(models.Rating);
       Comment.belongsTo(models.Comment, {
         foreignKey: "parent_id",
         as: "replies",
@@ -43,6 +43,14 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
         references: {
           model: "Users",
+          key: "id",
+        },
+      },
+      parent_id: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        references: {
+          model: "Comment",
           key: "id",
         },
       },
