@@ -91,6 +91,52 @@ router.put("/:id", userPut, async (req, res) => {
   }
 });
 
+
+router.post('/forgot', async (req, res, next) => {
+  try {
+    const email = req.body.email
+    const user = await db['User'].findOne({
+      attributes: {
+        exclude: ['password'],
+      },
+      where: {
+        email: email,
+      },
+    });
+    if (!user) {
+      return next(new HttpError('Email incorecto', 401))
+    }
+    //
+    return
+  }
+  catch (error) {
+    res.status(500).json({ error: "Error al soliitar cambio" });
+  }
+});
+
+router.post('/reset', async (req, res, next) => {
+  try {
+    const password = req.body.password
+
+    if (!password)
+      return next(new HttpError('Debe proveer la nueva contraseña', 401))
+    //
+    const user = await db['User'].findByPk()
+    await user.update({ password: md5(password) })
+    return res.status(200).send({ message: 'Contraseña actualizada' })
+  } catch (error) {
+    log.error(error.stack)
+    next(error)
+  }
+})
+
+
+
+
+
+
+
+
 /**
  * Route handler for deleting a user by ID.
  * Returns a 404 error if the user does not exist.
