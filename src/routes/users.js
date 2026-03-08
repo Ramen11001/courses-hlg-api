@@ -7,6 +7,12 @@ const {
 } = require("../service/models/validator/user.validator");
 const { validationResult } = require("express-validator");
 const { filterPagination } = require("../service/query/filter/filter.service");
+const jwt = require("jsonwebtoken");
+const md5 = require("md5");
+const HttpError = require("http-errors");
+const { User } = require("../models");
+const authService = require("../service/auth.service");
+const SECRET_KEY = authService.SECRET_KEY;
 
 /**
  * Route handler for creating a new user.
@@ -91,51 +97,104 @@ router.put("/:id", userPut, async (req, res) => {
   }
 });
 
-
+/**
+ * Password password using the token
+ * @route POST /user/forgot
+ */
 router.post('/forgot', async (req, res, next) => {
   try {
-    const email = req.body.email
-    const user = await db['User'].findOne({
-      attributes: {
-        exclude: ['password'],
-      },
-      where: {
-        email: email,
-      },
-    });
-    if (!user) {
-      return next(new HttpError('Email incorecto', 401))
+    const { email } = req.body;
+
+    if (!email) {
+      return next(new HttpError('El email es obligatorio', 400));
     }
-    //
-    return
-  }
-  catch (error) {
-    res.status(500).json({ error: "Error al soliitar cambio" });
+
+    const user = await User.findOne({
+      where: { email },
+      attributes: { exclude: ['password'] }
+    });
+
+    if (!user) {
+      return res.status(200).json({
+        message: 'Si el email existe, recibirás instrucciones para restablecer tu contraseña'
+      });
+    }
+
+    const token = jwt.sign(
+      { user: user.id },
+      SECRET_KEY,
+      { expiresIn: 86400 }
+    );
+
+    // TODO: implement emailsend 
+    const msg = await mailer.renderHtml({
+      requestUrl: req.body.requestUrl,
+      username: user.firstName || user.username,
+      token: token,
+    }, 'emails/reset-password');
+
+    await mailer.send(user.email, 'Solicitud de cambio de contraseña', msg);
+
+    return res.status(200).json({
+      message: 'Se han enviado las instrucciones a tu correo electrónico'
+    });
+
+  } catch (error) {
+    console.error('Error en forgot password:', error);
+    res.status(500).json({ error: "Error al procesar la solicitud" });
   }
 });
 
+/**
+ * Reset password using the token
+ * @route POST /user/reset
+ */
 router.post('/reset', async (req, res, next) => {
   try {
-    const password = req.body.password
+    const { resetToken, password } = req.body;
 
-    if (!password)
-      return next(new HttpError('Debe proveer la nueva contraseña', 401))
-    //
-    const user = await db['User'].findByPk()
-    await user.update({ password: md5(password) })
-    return res.status(200).send({ message: 'Contraseña actualizada' })
+    if (!resetToken) {
+      return next(new HttpError('Debe proveer el token de verificación', 401));
+    }
+
+    if (!password) {
+      return next(new HttpError('Debe proveer la nueva contraseña', 401));
+    }
+
+    if (password.length < 6) {
+      return next(new HttpError('La contraseña debe tener al menos 6 caracteres', 400));
+    }
+
+    let decoded;
+    try {
+      decoded = jwt.verify(resetToken, SECRET_KEY);
+    } catch (err) {
+      if (err.name === 'TokenExpiredError') {
+        return next(new HttpError('El token ha expirado', 401));
+      }
+      return next(new HttpError('Token inválido', 401));
+    }
+
+
+    const user = await User.findByPk(decoded.user);
+
+    if (!user) {
+      return next(new HttpError('Usuario no encontrado', 404));
+    }
+
+    await user.update({
+      password: md5(password)
+    });
+
+    return res.status(200).json({
+      message: 'Contraseña actualizada exitosamente'
+    });
+
   } catch (error) {
-    log.error(error.stack)
-    next(error)
+    console.error('Error en reset password:', error);
+    next(error);
   }
-})
-
-
-
-
-
-
-
+});
 
 /**
  * Route handler for deleting a user by ID.
