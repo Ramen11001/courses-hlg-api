@@ -101,7 +101,7 @@ async function getCongratsMessages(id) {
 
   //Birthday
   if (today.format("MM/DD") === moment(user.birthday).format("MM/DD")) {
-    const message = BIRTH_DAY_MESSAGE` ${fullName}`;
+    const message = `${BIRTH_DAY_MESSAGE} ${fullName}`;
     congratMessage.push({
       type: "birthday",
       message,
