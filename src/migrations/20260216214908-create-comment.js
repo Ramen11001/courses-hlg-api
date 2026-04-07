@@ -9,26 +9,30 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER,
       },
-      user_id: {
+      rating: {
         allowNull: false,
+        type: Sequelize.INTEGER,
+      },
+      text: {
+        allowNull: false,
+        type: Sequelize.STRING,
+      },
+      userId: {
         type: Sequelize.INTEGER,
         references: {
           model: "Users",
           key: "id",
         },
         onDelete: "CASCADE",
+        allowNull: false,
       },
-      parent_id: {
-        allowNull: true,
+      productId: {
         type: Sequelize.INTEGER,
         references: {
-          model: "Comments",
+          model: "Products",
           key: "id",
         },
         onDelete: "CASCADE",
-      },
-      content: {
-        type: Sequelize.TEXT,
         allowNull: false,
       },
       createdAt: {
@@ -37,10 +41,6 @@ module.exports = {
       },
       updatedAt: {
         allowNull: false,
-        type: Sequelize.DATE,
-      },
-      deletedAt: {
-        allowNull: true,
         type: Sequelize.DATE,
       },
     });

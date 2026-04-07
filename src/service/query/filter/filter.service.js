@@ -21,7 +21,6 @@ function filterPagination(req, res, next) {
           { title: { [Op.iLike]: `%${search}%` } },
           { description: { [Op.iLike]: `%${search}%` } },
           { location: { [Op.iLike]: `%${search}%` } },
-          { tags: { [Op.iLike]: `%${search}%` } },
         ],
       };
     }

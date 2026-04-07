@@ -12,6 +12,9 @@ module.exports = (sequelize, DataTypes) => {
         onDelete: "CASCADE",
         foreignKey: "user_id",
       });
+
+      Course.hasOne(models.Tags);
+      Course.hasOne(models.Duration);
     }
   }
   Course.init(
@@ -40,15 +43,6 @@ module.exports = (sequelize, DataTypes) => {
       cost: {
         type: DataTypes.DOUBLE,
         allowNull: false,
-      },
-      tags: {
-        type: DataTypes.JSONB,
-        defaultValue: [],
-      },
-      duration: {
-        type: DataTypes.JSONB,
-        defaultValue: [],
-
       },
       certificate: {
         type: DataTypes.BOOLEAN,
@@ -91,7 +85,7 @@ module.exports = (sequelize, DataTypes) => {
     {
       sequelize,
       modelName: "Course",
-      tableName: "course",
+      tableName: "courses",
     },
   );
   return Course;

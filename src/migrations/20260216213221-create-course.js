@@ -39,15 +39,6 @@ module.exports = {
         defaultValue: false,
         allowNull: false,
       },
-      tags: {
-        type: Sequelize.JSON,
-        defaultValue: [],
-      },
-      duration: {
-        type: Sequelize.JSON,
-        defaultValue: [],
-        allowNull: false,
-      },
       area: {
         type: Sequelize.ENUM(
           "Técnica",
