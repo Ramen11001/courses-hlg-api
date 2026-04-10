@@ -12,7 +12,7 @@ module.exports = (sequelize, DataTypes) => {
       User.hasOne(models.Notification);
       User.hasOne(models.Course);
       User.hasOne(models.Role);
-      User.hasOne(models.Rating);
+
     }
   }
   User.init(
@@ -52,11 +52,14 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.ENUM("privado", "estatal"),
         defaultValue: "estatal",
       },
+      rating: {
+        type: DataTypes.DOUBLE,
+      },
     },
     {
       sequelize,
       modelName: "User",
-      tableName: "users",
+      tableName: "Users",
     },
   );
   return User;

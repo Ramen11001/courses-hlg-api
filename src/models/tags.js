@@ -20,7 +20,7 @@ module.exports = (sequelize, DataTypes) => {
       name: {
         type: DataTypes.STRING,
         allowNull: false,
-        unique: "unique_course_id_tag",
+      
       },
       color: {
         type: DataTypes.STRING(7),

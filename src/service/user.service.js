@@ -62,6 +62,14 @@ const updateUser = async (id, data) => {
     }
     return await user.update(data); //Sequelize's own function
   }
+
+  if (!user) {
+    throw new Error("Usuario no encontrado");
+  }
+
+  if (user.user_id !== id) {
+    throw new Error("No tienes permiso para editar este curso");
+  }
   return null;
 };
 

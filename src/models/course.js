@@ -12,9 +12,9 @@ module.exports = (sequelize, DataTypes) => {
         onDelete: "CASCADE",
         foreignKey: "user_id",
       });
-
-      Course.hasOne(models.Tags);
+     
       Course.hasOne(models.Duration);
+
     }
   }
   Course.init(

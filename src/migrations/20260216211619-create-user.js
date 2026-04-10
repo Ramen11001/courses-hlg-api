@@ -42,6 +42,9 @@ module.exports = {
         type: Sequelize.ENUM("privado", "estatal"),
         defaultValue: "estatal",
       },
+      rating: {
+        type: Sequelize.DOUBLE
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,

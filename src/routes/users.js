@@ -80,6 +80,7 @@ router.get("/:id", async (req, res) => {
  * @param {object} req - The HTTP request object.
  * @param {object} res - The HTTP response object.
  */
+// routes/userRoutes.js
 router.put("/:id", userPut, async (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
@@ -87,12 +88,25 @@ router.put("/:id", userPut, async (req, res) => {
   }
 
   try {
-    const updatedUser = await userService.updateUser(req.params.id, req.body);
-    if (!updatedUser) {
-      return res.status(404).json({ message: "Usuario no encontrado" });
+    if (!req.user || !req.user.id) {
+      return res.status(401).json({ error: "Debes iniciar sesión" });
     }
+
+    const updatedUser = await userService.updateUser(
+      req.params.id,
+      req.body,
+    );
+
     res.json(updatedUser);
   } catch (error) {
+    if (error.message === "Usuario no encontrado") {
+      return res.status(404).json({ error: error.message });
+    }
+
+    if (error.message === "No tienes permiso para editar este usuario") {
+      return res.status(403).json({ error: error.message });
+    }
+
     res.status(500).json({ error: "Error al actualizar el usuario" });
   }
 });
@@ -116,5 +130,29 @@ router.delete("/:id", async (req, res) => {
     res.status(500).json({ error: "Error al eliminar el usuario" });
   }
 });
+
+/**
+ * Route handler for a bd mssg.
+ * Returns a 404 error if the user does not exist.
+ *
+ * @route GET /user
+ */
+router.get('/getCongratsMessages',
+  async function (req, res, next) {
+    // Month validation
+    if (!!req.query.month && +req.query.month < 0 && +req.query.month > 11) req.query.month = null
+
+    // Basic search parameters
+    let search = {
+      attributes: ['full_name'],
+      include: [''],
+    }
+    try {
+      res.send(await getByBirthday(search, req.query.month))
+    } catch (error) {
+      res.status(400).json({ error: "Usuario no encontrado" });
+    }
+  }
+)
 
 module.exports = router;
