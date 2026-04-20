@@ -134,7 +134,7 @@ router.post("/reset-password", async (req, res) => {
     }
 
     // Serch User
-    const user = await User.findByPk(decoded.userId);
+    const user = await db['User'].findByPk(decoded.userId);
 
     if (!user) {
       return res.status(404).json({

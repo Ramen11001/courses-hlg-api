@@ -1,54 +1,62 @@
 'use strict';
-const {
-  Model
-} = require('sequelize');
+const { Model } = require('sequelize');
+
 module.exports = (sequelize, DataTypes) => {
   class Comment extends Model {
-    /**
-     * Helper method for defining associations.
-     * This method is not a part of Sequelize lifecycle.
-     * The `models/index` file will call this method automatically.
-     */
     static associate(models) {
       Comment.belongsTo(models.User, {
         onDelete: "CASCADE",
         foreignKey: "user_id",
+        as: 'user'
       });
+
       Comment.belongsTo(models.Course, {
         onDelete: "CASCADE",
         foreignKey: "course_id",
+        as: 'course'
       });
     }
-
   }
+
   Comment.init({
-    text: DataTypes.STRING,
+    text: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
     rating: {
       type: DataTypes.DOUBLE,
+      allowNull: false,
+      validate: {
+        min: 1,
+        max: 5
+      }
     },
-    // Foreign Keys
     user_id: {
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {
-        model: "User",
-        key: "id",
+        model: 'User',
+        key: 'id',
       },
+      field: 'user_id'
     },
-    // Foreign Keys
     course_id: {
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {
-        model: "Course",
-        key: "id",
+        model: 'Course',
+        key: 'id',
       },
-    },
+    }
   }, {
     sequelize,
     modelName: 'Comment',
-    tableName: "comments",
-
+    tableName: 'comments',
+    timestamps: true,
+    underscored: true,
+    underscoredAll: true,
+    freezeTableName: true
   });
+
   return Comment;
 };

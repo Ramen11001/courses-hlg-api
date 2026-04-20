@@ -1,26 +1,24 @@
 "use strict";
-const { User } = require("../models");
-const { Course } = require("../models");
+
+const db = require("../models");
+
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
     //For User
     async function getUserId() {
-      const id_users = await User.findAll({
+      const id_users = await db['User'].findAll({
         attributes: ["id"],
       });
       return id_users;
     }
     const user_id = await getUserId();
     //For Course
-    async function getCourseId() {
-      const id_courses = await Course.findAll({
-        attributes: ["id"],
-      });
-      return id_courses;
-    }
-    const course_id = await getCourseId();
-    return queryInterface.bulkInsert("Comments", [
+    const course_id = await queryInterface.sequelize.query(
+      'SELECT id FROM courses ORDER BY id;',
+      { type: Sequelize.QueryTypes.SELECT }
+    );
+    await queryInterface.bulkInsert("comments", [
       {
         rating: 1,
         text: "Lo tiene todo",
@@ -40,7 +38,7 @@ module.exports = {
       {
         rating: 3,
         text: "!!!!",
-        user_id: course_id[5].id,
+        user_id: user_id[5].id,
         course_id: course_id[4].id,
         createdAt: new Date(),
         updatedAt: new Date(),
@@ -48,7 +46,7 @@ module.exports = {
       {
         rating: 4,
         text: "I prefer another level",
-        user_id: course_id[4].id,
+        user_id: user_id[4].id,
         course_id: course_id[3].id,
         createdAt: new Date(),
         updatedAt: new Date(),
@@ -81,6 +79,6 @@ module.exports = {
   },
   async down(queryInterface, Sequelize) {
     //This is for delete the Comment Table
-    return queryInterface.bulkDelete("Comments", null, {});
+    await queryInterface.bulkDelete("comments", null, {});
   },
 };

@@ -1,4 +1,4 @@
-const { User } = require("../models");
+const db = require("../models");
 const md5 = require("md5");
 const moment = require("moment");
 const {
@@ -14,7 +14,7 @@ const {
  * @returns {Promise<Array>} - List of user matching query options.
  */
 const getUser = async (queryOptions = {}) => {
-  return await User.findAll({
+  return await db['User'].findAll({
     ...queryOptions,
     attributes: { exclude: ["password"] }, //
   });
@@ -29,7 +29,7 @@ const getUser = async (queryOptions = {}) => {
  * @returns {Promise<object|null>} - The found user or null if not found.
  */
 const getUserById = async (id) => {
-  return await User.findByPk(id);
+  return await db['User'].findByPk(id);
 };
 
 /**
@@ -42,7 +42,7 @@ const getUserById = async (id) => {
  */
 const createUser = async (data) => {
   data.password = md5(data.password);
-  return await User.create(data); //data is generic
+  return await db['User'].create(data); //data is generic
 };
 
 /**
@@ -55,7 +55,7 @@ const createUser = async (data) => {
  * @returns {Promise<object|null>} - The updated user or null if not found.
  */
 const updateUser = async (id, data) => {
-  const user = await User.findByPk(id);
+  const user = await db['User'].findByPk(id);
   if (user) {
     if (data.password) {
       data.password = md5(data.password);
@@ -82,7 +82,7 @@ const updateUser = async (id, data) => {
  * @returns {Promise<object|null>} - A success message or null if the user was not found.
  */
 const deleteUser = async (id) => {
-  const users = await User.findByPk(id);
+  const users = await db['User'].findByPk(id);
   if (!users) {
     return null;
   }
@@ -99,7 +99,7 @@ async function getCongratsMessages(id) {
   const today = moment();
 
   // Search user
-  const user = await User.findByPk(id, {
+  const user = await db['User'].findByPk(id, {
     attributes: ["id", "firstName", "lastName", "birthday"],
   });
   if (!user) return [];

@@ -1,4 +1,4 @@
-const { Course } = require("../models");
+const db = require("../models");
 
 /**
  * Retrieves all courses based on query options.
@@ -9,9 +9,50 @@ const { Course } = require("../models");
  * @returns {Promise<Array>} - List of courses matching query options.
  */
 const getCourses = async (queryOptions = {}) => {
-  return await Course.findAll(queryOptions);
-};
+  const defaultOptions = {
+    attributes: {
+      exclude: ['UserId']  // Excluir el campo UserId que no existe
+    },
+    include: [
+      {
+        model: db['Comment'],
+        as: 'comments',
+        required: false,
+        attributes: {
+          exclude: ['UserId']  // Excluir UserId de comments también
+        },
+        include: [
+          {
+            model: db['User'],
+            as: 'user',
+            attributes: ['id', 'name', 'email']
+          }
+        ]
+      },
+      {
+        model: db['User'],
+        as: 'user',
+        attributes: ['id', 'name', 'email']
+      }
+    ],
+    order: [['createdAt', 'DESC']]
+  };
 
+  // Combinar las opciones
+  const options = { ...defaultOptions, ...queryOptions };
+  
+  // Manejar el include de forma segura
+  if (queryOptions.include) {
+    // Asegurarse de que sea un array
+    const queryInclude = Array.isArray(queryOptions.include) 
+      ? queryOptions.include 
+      : [queryOptions.include];
+    
+    options.include = [...defaultOptions.include, ...queryInclude];
+  }
+
+  return await db['Course'].findAll(options);
+};
 /**
  * Retrieves a specific courses by its ID.
  *
@@ -21,7 +62,25 @@ const getCourses = async (queryOptions = {}) => {
  * @returns {Promise<object|null>} - The found courses or null if not found.
  */
 const getCoursesById = async (id) => {
-  return await Course.findByPk(id);
+  return await db['Course'].findByPk(id);
+};
+
+/**
+ * Retrieves a specific courses by user id.
+ *
+ * @async
+ * @function getCoursesByUserId
+ * @param {number} id - The ID of the user.
+ * @returns {Promise<object|null>} - The found courses or null if not found.
+ */
+const getCoursesByUserId = async (user_id) => {
+  const user_id_course = course.user_id;
+  if (course.user_id !== user_id) {
+    throw new Error("No es tu curso");
+  }
+  return db['Course'].findAll({
+    attributes: Course.user_id === user_id_course,
+  })
 };
 
 /**
@@ -46,7 +105,7 @@ const createCourse = async (data) => {
  * @returns {Promise<object|null>} - The updated course or null if not found.
  */
 const updateCourse = async (id, data, user_id) => {
-  const course = await Course.findByPk(id);
+  const course = await db['Course'].findByPk(id);
 
   if (!course) {
     throw new Error("Curso no encontrado");
@@ -68,7 +127,7 @@ const updateCourse = async (id, data, user_id) => {
  * @returns {Promise<object|null>} - A success message or null if the course was not found.
  */
 const deleteCourse = async (id, user_id) => {
-  const course = await Course.findByPk(id);
+  const course = await db['Course'].findByPk(id);
   if (!course) {
     return null;
   }
@@ -86,4 +145,5 @@ module.exports = {
   createCourse,
   updateCourse,
   deleteCourse,
+  getCoursesByUserId,
 };

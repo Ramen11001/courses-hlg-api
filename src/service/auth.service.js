@@ -1,5 +1,5 @@
 const jwt = require("jsonwebtoken");
-const { User } = require("../models");
+const db = require("../models");
 const SECRET_KEY = "secret_key";
 
 /**
@@ -9,7 +9,7 @@ const SECRET_KEY = "secret_key";
  * @returns {Object} JWT token and user data
  */
 const login = async (email, password) => {
-  const user = await User.findOne({ where: { email } });
+  const user = await db['User'].findOne({ where: { email } });
 
   if (!user || user.password !== password) {
     const error = new Error("Credenciales inválidas");
@@ -21,12 +21,13 @@ const login = async (email, password) => {
       id: user.id,
       email: user.email,
       role: user.role,
+      name: user.firstName,
     },
     SECRET_KEY,
     { expiresIn: "1h" },
   );
 
-  return { token, user: { email: user.email, id: user.id } };
+  return { token, user: { email: user.email, id: user.id, role: user.role, name: user.firstName, } };
 };
 
 /**
@@ -39,7 +40,7 @@ const login = async (email, password) => {
  */
 const register = async (firstName, lastName, email, password) => {
   // Verificar si el usuario ya existe
-  const existingUser = await User.findOne({
+  const existingUser = await db['User'].findOne({
     where: { email },
   });
 

@@ -1,4 +1,4 @@
-const { Comment, User } = require("../models");
+const db = require("../models");
 /**
  * Retrieves all comments based on query options.
  *
@@ -8,7 +8,7 @@ const { Comment, User } = require("../models");
  * @returns {Promise<Array>} - List of comments matching query options.
  */
 const getComment = async (queryOptions = {}) => {
-  return await Comment.findAll(queryOptions);
+  return await db['Comment'].findAll(queryOptions);
 };
 
 /**
@@ -20,7 +20,7 @@ const getComment = async (queryOptions = {}) => {
  * @returns {Promise<object|null>} - The found comment or null if not found.
  */
 const getCommentsById = async (id) => {
-  return await Comment.findByPk(id);
+  return await db['Comment'].findByPk(id);
 };
 
 /**
@@ -29,7 +29,7 @@ const getCommentsById = async (id) => {
  * @returns {Promise<Array>} - List of comments for the user
  */
 const getCommentsByUser = async (user_id) => {
-  return await Comment.findAll({
+  return await db['Comment'].findAll({
     where: { user_id },
     include: [
       {
@@ -50,7 +50,7 @@ const getCommentsByUser = async (user_id) => {
  * @returns {Promise<object>} - The newly created comment.
  */
 const createComment = async (data) => {
-  return await Comment.create(data);
+  return await db['Comment'].create(data);
 };
 
 /**
@@ -63,7 +63,7 @@ const createComment = async (data) => {
  * @returns {Promise<object|null>} - The updated comment or null if not found.
  */
 const updateComment = async (id, data) => {
-  const comments = await Comment.findByPk(id);
+  const comments = await db['Comment'].findByPk(id);
   if (comments) {
     return await comments.update(data);
   }
@@ -79,7 +79,7 @@ const updateComment = async (id, data) => {
  * @returns {Promise<object|null>} - A success message or null if the comment was not found.
  */
 const deleteComment = async (id) => {
-  const comments = await Comment.findByPk(id);
+  const comments = await db['Comment'].findByPk(id);
   if (!comments) {
     return null;
   }

@@ -1,21 +1,30 @@
 "use strict";
 
+const db = require("../models");
+
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    // Get user id with queryInterface
-    const users = await queryInterface.sequelize.query(
-      'SELECT id FROM "Users";',
-      { type: queryInterface.sequelize.QueryTypes.SELECT },
-    );
-    // validator.
-    if (users.length === 0) {
-      throw new Error(
-        "No hay usuarios en la base de datos. Ejecuta primero el seed de usuarios.",
-      );
+    //For User
+    async function getUserId() {
+      const id_users = await db['User'].findAll({
+        attributes: ["id"],
+      });
+      return id_users;
     }
+    const user_id = await getUserId();
 
-    const courses = [
+
+    //For Comment
+    async function getCommentId() {
+      const id_comment = await db['Comment'].findAll({
+        attributes: ["id"],
+      });
+      return id_comment;
+    }
+    const comment_id = await getCommentId();
+
+    const course = [
       {
         title: "Desarrollo Web Full Stack con JavaScript",
         description:
@@ -24,7 +33,8 @@ module.exports = {
           "Módulo 1: Fundamentos de JavaScript\nMódulo 2: Backend con Node.js y Express\nMódulo 3: Frontend con React\nMódulo 4: Bases de datos con MongoDB\nMódulo 5: Despliegue y DevOps",
         location: "Joven Club",
         cost: 499.99,
-        user_id: users[2]?.id,
+        user_id: user_id[2]?.id,
+        comment_id: comment_id[1]?.id,
         area: "Técnica",
         mode: "Híbrida",
         level: "alto",
@@ -40,7 +50,8 @@ module.exports = {
           "Semana 1-2: Python básico\nSemana 3-4: NumPy y Pandas\nSemana 5-6: Visualización con Matplotlib\nSemana 7-8: Machine Learning con Scikit-learn\nSemana 9-10: Deep Learning con TensorFlow\nSemana 11-12: Proyecto final",
         location: "Joven Club",
         cost: 799.99,
-        user_id: users[3]?.id,
+        user_id: user_id[3]?.id,
+        comment_id: comment_id[2]?.id,
         area: "Técnica",
         mode: "Híbrida",
         level: "alto",
@@ -56,7 +67,8 @@ module.exports = {
           "Módulo 1: Fundamentos de UX\nMódulo 2: Investigación de usuarios\nMódulo 3: Wireframing y prototipado\nMódulo 4: Diseño visual UI\nMódulo 5: Testing y iteración\nMódulo 6: Portfolio y casos de estudio",
         location: "Joven Club",
         cost: 649.5,
-        user_id: users[4]?.id,
+        user_id: user_id[4]?.id,
+        comment_id: comment_id[3]?.id,
         certificate: true,
         area: "Artes",
         mode: "Presencial",
@@ -72,7 +84,8 @@ module.exports = {
           "Semana 1: Fundamentos de marketing digital\nSemana 2: SEO y contenido\nSemana 3: SEM y publicidad pagada\nSemana 4: Email marketing y automatización\nSemana 5: Growth hacking\nSemana 6: Analítica y KPIs",
         location: "UHO Holguín",
         cost: 399.99,
-        user_id: users[5]?.id,
+        user_id: user_id[5]?.id,
+        comment_id: comment_id[4]?.id,
         certificate: false,
         area: "Administración",
         mode: "Híbrida",
@@ -88,7 +101,8 @@ module.exports = {
           "Módulo 1: Fundamentos DevOps\nMódulo 2: Docker y contenedores\nMódulo 3: Kubernetes\nMódulo 4: CI/CD con Jenkins\nMódulo 5: AWS Services\nMódulo 6: Infraestructura como código con Terraform",
         location: "UHO Holguín",
         cost: 899.99,
-        user_id: users[2]?.id,
+        user_id: user_id[2]?.id,
+        comment_id: comment_id[5]?.id,
         certificate: true,
         area: "Técnica",
         mode: "Híbrida",
@@ -104,7 +118,8 @@ module.exports = {
           "Semana 1-2: Fundamentos de React Native\nSemana 3-4: Navegación y estado\nSemana 5-6: APIs nativas y dispositivos\nSemana 7-8: UI/UX en móviles\nSemana 9-10: Testing y debugging\nSemana 11-12: Publicación y monetización",
         location: "UHO Holguín",
         cost: 549.99,
-        user_id: users[5]?.id,
+        user_id: user_id[5]?.id,
+        comment_id: comment_id[1]?.id,
         area: "Técnica",
         mode: "Presencial",
         level: "medio",
@@ -120,7 +135,8 @@ module.exports = {
           "Módulo 1: Fundamentos de seguridad\nMódulo 2: Criptografía básica\nMódulo 3: Seguridad en redes\nMódulo 4: Ethical hacking\nMódulo 5: Seguridad en aplicaciones web",
         location: "UHO Holguín",
         cost: 299.99,
-        user_id: users[3]?.id,
+        user_id: user_id[3]?.id,
+        comment_id: comment_id[2]?.id,
         certificate: true,
         area: "Técnica",
         mode: "Híbrida",
@@ -136,7 +152,8 @@ module.exports = {
           "Módulo 1: Manifiesto Ágil\nMódulo 2: Scrum Framework\nMódulo 3: Kanban\nMódulo 4: Herramientas (Jira, Trello)\nMódulo 5: Liderazgo ágil\nMódulo 6: Preparación para certificación",
         location: "UHO Holguín",
         cost: 449.99,
-        user_id: users[4]?.id,
+        user_id: user_id[4]?.id,
+        comment_id: comment_id[1]?.id,
         certificate: false,
         area: "Administración",
         mode: "Presencial",
@@ -146,10 +163,10 @@ module.exports = {
       },
     ];
 
-    return queryInterface.bulkInsert("Courses", courses);
+    await queryInterface.bulkInsert("courses", course);
   },
 
   async down(queryInterface, Sequelize) {
-    return queryInterface.bulkDelete("Courses", null, {});
+    await queryInterface.bulkDelete("courses", null, {});
   },
 };

@@ -55,11 +55,19 @@ module.exports = (sequelize, DataTypes) => {
       rating: {
         type: DataTypes.DOUBLE,
       },
+      comment_id: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        references: {
+          model: "Comment",
+          key: "id",
+        },
+      },
     },
     {
       sequelize,
       modelName: "User",
-      tableName: "Users",
+      tableName: "users",
     },
   );
   return User;

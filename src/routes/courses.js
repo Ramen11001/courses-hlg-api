@@ -67,6 +67,26 @@ router.get("/:id", async (req, res) => {
 });
 
 /**
+ * Route handler for retrieving a specific course by ID.
+ * Returns a 404 error if the course is not found.
+ *
+ * @route GET /courses/:id
+ * @param {object} req - The HTTP request object.
+ * @param {object} res - The HTTP response object.
+ */
+router.get("/:user_id", async (req, res) => {
+  try {
+    const course = await courseService.getCoursesByUserId(req.params.user_id);
+    if (!course) {
+      return res.status(404).json({ message: "Curso no encontrado" });
+    }
+    res.json(course);
+  } catch (error) {
+    res.status(500).json({ error: "Error al obtener el curso" });
+  }
+});
+
+/**
  * Route handler for updating a course by ID.
  * Validates the request body and returns a 404 error if the course is not found.
  *
