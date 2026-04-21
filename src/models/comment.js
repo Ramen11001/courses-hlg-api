@@ -1,62 +1,60 @@
-'use strict';
-const { Model } = require('sequelize');
+"use strict";
+const { Model } = require("sequelize");
 
 module.exports = (sequelize, DataTypes) => {
   class Comment extends Model {
     static associate(models) {
       Comment.belongsTo(models.User, {
-        onDelete: "CASCADE",
         foreignKey: "user_id",
-        as: 'user'
+        as: "user",
+        onDelete: "CASCADE",
       });
 
       Comment.belongsTo(models.Course, {
-        onDelete: "CASCADE",
         foreignKey: "course_id",
-        as: 'course'
+        as: "course",
+        onDelete: "CASCADE",
       });
     }
   }
 
-  Comment.init({
-    text: {
-      type: DataTypes.STRING,
-      allowNull: false
-    },
-    rating: {
-      type: DataTypes.DOUBLE,
-      allowNull: false,
-      validate: {
-        min: 1,
-        max: 5
-      }
-    },
-    user_id: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      references: {
-        model: 'User',
-        key: 'id',
+  Comment.init(
+    {
+      text: {
+        type: DataTypes.STRING,
+        allowNull: false,
       },
-      field: 'user_id'
-    },
-    course_id: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      references: {
-        model: 'Course',
-        key: 'id',
+      rating: {
+        type: DataTypes.DOUBLE,
+        allowNull: false,
+        validate: {
+          min: 1,
+          max: 5,
+        },
       },
-    }
-  }, {
-    sequelize,
-    modelName: 'Comment',
-    tableName: 'comments',
-    timestamps: true,
-    underscored: true,
-    underscoredAll: true,
-    freezeTableName: true
-  });
+      user_id: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        references: {
+          model: "users",
+          key: "id",
+        },
+      },
+      course_id: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        references: {
+          model: "courses",
+          key: "id",
+        },
+      },
+    },
+    {
+      sequelize,
+      modelName: "Comment",
+      tableName: "comments",
+    },
+  );
 
   return Comment;
 };

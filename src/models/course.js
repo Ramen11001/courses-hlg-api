@@ -1,4 +1,4 @@
-'use strict';
+"use strict";
 const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
   class Course extends Model {
@@ -12,8 +12,8 @@ module.exports = (sequelize, DataTypes) => {
 
       Course.hasMany(models.Comment, {
         onDelete: "CASCADE",
-        foreignKey: "course_id",
-        as: "comments"
+        foreignKey: "course_id", // ← Especifica explícitamente el foreignKey
+        as: "comments",
       });
     }
   }
@@ -78,7 +78,7 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
-          model: "User",
+          model: "users",
           key: "id",
         },
       },

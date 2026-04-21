@@ -11,9 +11,12 @@ module.exports = {
       },
       user_id: {
         allowNull: false,
-        autoIncrement: true,
-        foreignKey: true,
         type: Sequelize.INTEGER,
+        references: {
+          model: "users", // Asegúrate que coincida con tu tabla de Users
+          key: "id",
+        },
+        onDelete: "CASCADE",
       },
       title: {
         type: Sequelize.STRING,
@@ -25,10 +28,11 @@ module.exports = {
       },
       study_plan: {
         type: Sequelize.TEXT,
-        allowNull: false,
+        allowNull: true, // Cambiar a true porque en el modelo no tiene allowNull: false
       },
       location: {
         type: Sequelize.STRING,
+        allowNull: false, // Coincidir con el modelo
       },
       cost: {
         type: Sequelize.DOUBLE,

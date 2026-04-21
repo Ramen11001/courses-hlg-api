@@ -74,7 +74,7 @@ router.get("/:id", async (req, res) => {
  * @param {object} req - The HTTP request object.
  * @param {object} res - The HTTP response object.
  */
-router.get("/:user_id", async (req, res) => {
+router.get("/user/:user_id", async (req, res) => {
   try {
     const course = await courseService.getCoursesByUserId(req.params.user_id);
     if (!course) {

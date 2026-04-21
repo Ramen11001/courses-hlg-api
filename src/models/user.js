@@ -8,9 +8,9 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      User.hasOne(models.Comment);
-      User.hasOne(models.Notification);
-      User.hasOne(models.Course);
+      User.hasMany(models.Comment);
+      User.hasMany(models.Notification);
+      User.hasMany(models.Course);
       User.hasOne(models.Role);
 
     }
@@ -54,14 +54,6 @@ module.exports = (sequelize, DataTypes) => {
       },
       rating: {
         type: DataTypes.DOUBLE,
-      },
-      comment_id: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-        references: {
-          model: "Comment",
-          key: "id",
-        },
       },
     },
     {

@@ -9,7 +9,7 @@ const db = require("../models");
  * @returns {Promise<Array>} - List of courses matching query options.
  */
 const getCourses = async (queryOptions = {}) => {
-  return await db['Course'].findAll(queryOptions);
+  return await db["Course"].findAll(queryOptions);
 };
 
 /**
@@ -21,7 +21,7 @@ const getCourses = async (queryOptions = {}) => {
  * @returns {Promise<object|null>} - The found courses or null if not found.
  */
 const getCoursesById = async (id) => {
-  return await db['Course'].findByPk(id);
+  return await db["Course"].findByPk(id);
 };
 
 /**
@@ -33,13 +33,10 @@ const getCoursesById = async (id) => {
  * @returns {Promise<object|null>} - The found courses or null if not found.
  */
 const getCoursesByUserId = async (user_id) => {
-  const user_id_course = course.user_id;
-  if (course.user_id !== user_id) {
-    throw new Error("No es tu curso");
-  }
-  return db['Course'].findAll({
-    attributes: Course.user_id === user_id_course,
-  })
+  return await db["Course"].findAll({
+    where: { user_id: user_id },
+    include: ["comments"],
+  });
 };
 
 /**
@@ -64,7 +61,7 @@ const createCourse = async (data) => {
  * @returns {Promise<object|null>} - The updated course or null if not found.
  */
 const updateCourse = async (id, data, user_id) => {
-  const course = await db['Course'].findByPk(id);
+  const course = await db["Course"].findByPk(id);
 
   if (!course) {
     throw new Error("Curso no encontrado");
@@ -86,7 +83,7 @@ const updateCourse = async (id, data, user_id) => {
  * @returns {Promise<object|null>} - A success message or null if the course was not found.
  */
 const deleteCourse = async (id, user_id) => {
-  const course = await db['Course'].findByPk(id);
+  const course = await db["Course"].findByPk(id);
   if (!course) {
     return null;
   }
