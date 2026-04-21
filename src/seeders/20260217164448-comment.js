@@ -14,10 +14,14 @@ module.exports = {
     }
     const user_id = await getUserId();
     //For Course
-    const course_id = await queryInterface.sequelize.query(
-      'SELECT id FROM courses ORDER BY id;',
-      { type: Sequelize.QueryTypes.SELECT }
-    );
+    async function getCourseId() {
+      const id_course = await db['Course'].findAll({
+        attributes: ["id"],
+      });
+      return id_course;
+    }
+    const course_id = await getCourseId();
+
     await queryInterface.bulkInsert("comments", [
       {
         rating: 1,

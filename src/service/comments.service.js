@@ -33,8 +33,26 @@ const getCommentsByUser = async (user_id) => {
     where: { user_id },
     include: [
       {
-        model: User,
+        model: db['User'],
         attributes: ["id", "firstName", "lastName"],
+      },
+    ],
+    order: [["createdAt", "DESC"]],
+  });
+};
+
+/**
+ * Retrieves comments for a specific course
+ * @param {number} course_id - ID of the course
+ * @returns {Promise<Array>} - List of comments for the course
+ */
+const getCommentsByCourse = async (course_id) => {
+  return await db['Comment'].findAll({
+    where: { course_id },
+    include: [
+      {
+        model: db['Course'],
+        attributes: ["id", "title"],
       },
     ],
     order: [["createdAt", "DESC"]],
@@ -92,6 +110,7 @@ module.exports = {
   getComment,
   getCommentsById,
   getCommentsByUser,
+  getCommentsByCourse,
   createComment,
   updateComment,
   deleteComment,

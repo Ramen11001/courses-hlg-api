@@ -12,7 +12,8 @@ module.exports = (sequelize, DataTypes) => {
 
       Course.hasMany(models.Comment, {
         onDelete: "CASCADE",
-        foreignKey: "comment_id",
+        foreignKey: "course_id",
+        as: "comments"
       });
     }
   }
@@ -78,14 +79,6 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
         references: {
           model: "User",
-          key: "id",
-        },
-      },
-      comment_id: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-        references: {
-          model: "Comment",
           key: "id",
         },
       },

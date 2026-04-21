@@ -9,50 +9,9 @@ const db = require("../models");
  * @returns {Promise<Array>} - List of courses matching query options.
  */
 const getCourses = async (queryOptions = {}) => {
-  const defaultOptions = {
-    attributes: {
-      exclude: ['UserId']  // Excluir el campo UserId que no existe
-    },
-    include: [
-      {
-        model: db['Comment'],
-        as: 'comments',
-        required: false,
-        attributes: {
-          exclude: ['UserId']  // Excluir UserId de comments también
-        },
-        include: [
-          {
-            model: db['User'],
-            as: 'user',
-            attributes: ['id', 'name', 'email']
-          }
-        ]
-      },
-      {
-        model: db['User'],
-        as: 'user',
-        attributes: ['id', 'name', 'email']
-      }
-    ],
-    order: [['createdAt', 'DESC']]
-  };
-
-  // Combinar las opciones
-  const options = { ...defaultOptions, ...queryOptions };
-  
-  // Manejar el include de forma segura
-  if (queryOptions.include) {
-    // Asegurarse de que sea un array
-    const queryInclude = Array.isArray(queryOptions.include) 
-      ? queryOptions.include 
-      : [queryOptions.include];
-    
-    options.include = [...defaultOptions.include, ...queryInclude];
-  }
-
-  return await db['Course'].findAll(options);
+  return await db['Course'].findAll(queryOptions);
 };
+
 /**
  * Retrieves a specific courses by its ID.
  *

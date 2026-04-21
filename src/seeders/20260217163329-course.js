@@ -14,16 +14,6 @@ module.exports = {
     }
     const user_id = await getUserId();
 
-
-    //For Comment
-    async function getCommentId() {
-      const id_comment = await db['Comment'].findAll({
-        attributes: ["id"],
-      });
-      return id_comment;
-    }
-    const comment_id = await getCommentId();
-
     const course = [
       {
         title: "Desarrollo Web Full Stack con JavaScript",
@@ -34,7 +24,6 @@ module.exports = {
         location: "Joven Club",
         cost: 499.99,
         user_id: user_id[2]?.id,
-        comment_id: comment_id[1]?.id,
         area: "Técnica",
         mode: "Híbrida",
         level: "alto",
@@ -51,7 +40,6 @@ module.exports = {
         location: "Joven Club",
         cost: 799.99,
         user_id: user_id[3]?.id,
-        comment_id: comment_id[2]?.id,
         area: "Técnica",
         mode: "Híbrida",
         level: "alto",
@@ -68,7 +56,6 @@ module.exports = {
         location: "Joven Club",
         cost: 649.5,
         user_id: user_id[4]?.id,
-        comment_id: comment_id[3]?.id,
         certificate: true,
         area: "Artes",
         mode: "Presencial",
@@ -85,7 +72,6 @@ module.exports = {
         location: "UHO Holguín",
         cost: 399.99,
         user_id: user_id[5]?.id,
-        comment_id: comment_id[4]?.id,
         certificate: false,
         area: "Administración",
         mode: "Híbrida",
@@ -102,7 +88,6 @@ module.exports = {
         location: "UHO Holguín",
         cost: 899.99,
         user_id: user_id[2]?.id,
-        comment_id: comment_id[5]?.id,
         certificate: true,
         area: "Técnica",
         mode: "Híbrida",
@@ -119,7 +104,6 @@ module.exports = {
         location: "UHO Holguín",
         cost: 549.99,
         user_id: user_id[5]?.id,
-        comment_id: comment_id[1]?.id,
         area: "Técnica",
         mode: "Presencial",
         level: "medio",
@@ -136,7 +120,6 @@ module.exports = {
         location: "UHO Holguín",
         cost: 299.99,
         user_id: user_id[3]?.id,
-        comment_id: comment_id[2]?.id,
         certificate: true,
         area: "Técnica",
         mode: "Híbrida",
@@ -153,7 +136,6 @@ module.exports = {
         location: "UHO Holguín",
         cost: 449.99,
         user_id: user_id[4]?.id,
-        comment_id: comment_id[1]?.id,
         certificate: false,
         area: "Administración",
         mode: "Presencial",

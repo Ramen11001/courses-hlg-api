@@ -84,7 +84,7 @@ router.post("/forgot-password", async (req, res) => {
 
     //24 h token
     const token = jwt.sign(
-      { userId: user.id, email: user.email },
+      { user_id: user.id, email: user.email },
       SECRET_KEY,
       { expiresIn: 86400 }, // 24 horas
     );
@@ -134,7 +134,7 @@ router.post("/reset-password", async (req, res) => {
     }
 
     // Serch User
-    const user = await db['User'].findByPk(decoded.userId);
+    const user = await db['User'].findByPk(decoded.user_id);
 
     if (!user) {
       return res.status(404).json({
