@@ -12,7 +12,7 @@ module.exports = (sequelize, DataTypes) => {
 
       Course.hasMany(models.Comment, {
         onDelete: "CASCADE",
-        foreignKey: "course_id", // ← Especifica explícitamente el foreignKey
+        foreignKey: "course_id",
         as: "comments",
       });
     }

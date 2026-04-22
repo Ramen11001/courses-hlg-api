@@ -33,10 +33,11 @@ const getCoursesById = async (id) => {
  * @returns {Promise<object|null>} - The found courses or null if not found.
  */
 const getCoursesByUserId = async (user_id) => {
-  return await db["Course"].findAll({
+  const courses = await db["Course"].findAll({
     where: { user_id: user_id },
     include: ["comments"],
   });
+  return courses.length > 0 ? courses : null;
 };
 
 /**
@@ -48,7 +49,7 @@ const getCoursesByUserId = async (user_id) => {
  * @returns {Promise<object>} - The newly created course.
  */
 const createCourse = async (data) => {
-  return await Course.create(data); //data is generic
+  return await db["Course"].create(data); //data is generic
 };
 
 /**

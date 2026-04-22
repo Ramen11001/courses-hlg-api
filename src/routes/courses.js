@@ -76,13 +76,14 @@ router.get("/:id", async (req, res) => {
  */
 router.get("/user/:user_id", async (req, res) => {
   try {
-    const course = await courseService.getCoursesByUserId(req.params.user_id);
-    if (!course) {
-      return res.status(404).json({ message: "Curso no encontrado" });
+    const courses = await courseService.getCoursesByUserId(req.params.user_id);
+    if (!courses) {
+      return res.status(404).json({ message: "El usuario no tiene cursos" });
     }
-    res.json(course);
+    res.json(courses);
   } catch (error) {
-    res.status(500).json({ error: "Error al obtener el curso" });
+    console.error(error); 
+    res.status(500).json({ error: "Error interno del servidor" });
   }
 });
 
