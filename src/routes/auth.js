@@ -3,8 +3,9 @@ const jwt = require("jsonwebtoken");
 const { User } = require("../models");
 const router = express.Router();
 const SECRET_KEY = "secret_key";
-const authService = require("../service/auth.service")
+const authService = require("../service/auth.service");
 
+// region POST
 /**
  * Authentication path: `POST /auth/login`
  * @route POST /auth/login
@@ -134,7 +135,7 @@ router.post("/reset-password", async (req, res) => {
     }
 
     // Serch User
-    const user = await db['User'].findByPk(decoded.user_id);
+    const user = await db["User"].findByPk(decoded.user_id);
 
     if (!user) {
       return res.status(404).json({

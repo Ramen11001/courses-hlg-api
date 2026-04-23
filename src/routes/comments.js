@@ -8,27 +8,7 @@ const {
 const { validationResult } = require("express-validator");
 const { filterPagination } = require("../service/query/filter/filter.service");
 
-/**
- * Route handler for creating a new comment.
- * Validates the request body before passing it to the service.
- *
- * @route POST /comments
- * @param {object} req - The HTTP request object.
- * @param {object} res - The HTTP response object.
- */
-router.post("/", commentPost, async (req, res) => {
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    return res.status(400).json({ errors: errors.array() });
-  }
-  try {
-    const newComment = await commentService.createComment(req.body);
-    res.status(201).json(newComment);
-  } catch (error) {
-    res.status(500).json({ error: "Error al crear el comentario" });
-  }
-});
-
+// region GET
 /**
  * Route handler for retrieving comments with pagination and filtering.
  * Uses middleware to modify the query options before passing them to the service.
@@ -72,7 +52,9 @@ router.get("/:id", async (req, res) => {
  */
 router.get("/user/:user_id", filterPagination, async (req, res) => {
   try {
-    const comments = await commentService.getCommentsByUser(req.params.user_id ?? null);
+    const comments = await commentService.getCommentsByUser(
+      req.params.user_id ?? null,
+    );
 
     res.json(comments);
   } catch (error) {
@@ -87,7 +69,9 @@ router.get("/user/:user_id", filterPagination, async (req, res) => {
  */
 router.get("/courses/:course_id", filterPagination, async (req, res) => {
   try {
-    const comments = await commentService.getCommentsByCourse(req.params.course_id ?? null);
+    const comments = await commentService.getCommentsByCourse(
+      req.params.course_id ?? null,
+    );
 
     res.json(comments);
   } catch (error) {
@@ -96,6 +80,7 @@ router.get("/courses/:course_id", filterPagination, async (req, res) => {
   }
 });
 
+// region PUT
 /**
  * Route handler for updating a comment by ID.
  * Validates the request body and returns a 404 error if the comment is not found.
@@ -124,6 +109,29 @@ router.put("/:id", commentPut, async (req, res) => {
   }
 });
 
+// region POST
+/**
+ * Route handler for creating a new comment.
+ * Validates the request body before passing it to the service.
+ *
+ * @route POST /comments
+ * @param {object} req - The HTTP request object.
+ * @param {object} res - The HTTP response object.
+ */
+router.post("/", commentPost, async (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
+  try {
+    const newComment = await commentService.createComment(req.body);
+    res.status(201).json(newComment);
+  } catch (error) {
+    res.status(500).json({ error: "Error al crear el comentario" });
+  }
+});
+
+//region DELETE
 /**
  * Route handler for deleting a comment by ID.
  * Returns a 404 error if the comment does not exist.

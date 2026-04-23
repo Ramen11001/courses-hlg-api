@@ -8,27 +8,7 @@ const {
 const { validationResult } = require("express-validator");
 const { filterPagination } = require("../service/query/filter/filter.service");
 
-/**
- * Route handler for creating a new course.
- * Validates the request body before passing it to the service.
- *
- * @route POST /courses
- * @param {object} req - The HTTP request object.
- * @param {object} res - The HTTP response object.
- */
-router.post("/", coursePost, async (req, res) => {
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    return res.status(400).json({ errors: errors.array() });
-  }
-  try {
-    const newCourse = await courseService.createCourse(req.body);
-    res.status(201).json(newCourse);
-  } catch (error) {
-    res.status(500).json({ error: "Error al crear el curso" });
-  }
-});
-
+// region GET:
 /**
  * Route handler for retrieving courses with pagination and filtering.
  * Uses middleware to modify query options before passing them to the service.
@@ -82,11 +62,12 @@ router.get("/user/:user_id", async (req, res) => {
     }
     res.json(courses);
   } catch (error) {
-    console.error(error); 
+    console.error(error);
     res.status(500).json({ error: "Error interno del servidor" });
   }
 });
 
+// region PUT:
 /**
  * Route handler for updating a course by ID.
  * Validates the request body and returns a 404 error if the course is not found.
@@ -127,6 +108,29 @@ router.put("/:id", coursePut, async (req, res) => {
   }
 });
 
+// region POST
+/**
+ * Route handler for creating a new course.
+ * Validates the request body before passing it to the service.
+ *
+ * @route POST /courses
+ * @param {object} req - The HTTP request object.
+ * @param {object} res - The HTTP response object.
+ */
+router.post("/", coursePost, async (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
+  try {
+    const newCourse = await courseService.createCourse(req.body);
+    res.status(201).json(newCourse);
+  } catch (error) {
+    res.status(500).json({ error: "Error al crear el curso" });
+  }
+});
+
+// region DELETE:
 /**
  * Route handler for deleting a course by ID.
  * Returns a 404 error if the course does not exist.

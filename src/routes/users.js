@@ -14,26 +14,7 @@ const { User } = require("../models");
 const authService = require("../service/auth.service");
 const SECRET_KEY = authService.SECRET_KEY;
 
-/**
- * Route handler for creating a new user.
- * Validates the request body before passing it to the service.
- *
- * @route POST /user
- * @param {object} req - The HTTP request object.
- * @param {object} res - The HTTP response object.
- */
-router.post("/", userPost, async (req, res) => {
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    return res.status(400).json({ errors: errors.array() });
-  }
-  try {
-    const newUser = await userService.createUser(req.body);
-    res.status(201).json(newUser);
-  } catch (error) {
-    res.status(500).json({ error: "Error al crear el usuario" });
-  }
-});
+//region GET
 
 /**
  * Route handler for retrieving user with pagination and filtering.
@@ -73,6 +54,30 @@ router.get("/:id", async (req, res) => {
 });
 
 /**
+ * Route handler for a bd mssg.
+ * Returns a 404 error if the user does not exist.
+ *
+ * @route GET /user
+ */
+router.get("/getCongratsMessages", async function (req, res, next) {
+  // Month validation
+  if (!!req.query.month && +req.query.month < 0 && +req.query.month > 11)
+    req.query.month = null;
+
+  // Basic search parameters
+  let search = {
+    attributes: ["full_name"],
+    include: [""],
+  };
+  try {
+    res.send(await getByBirthday(search, req.query.month));
+  } catch (error) {
+    res.status(400).json({ error: "Usuario no encontrado" });
+  }
+});
+
+//region PUT
+/**
  * Route handler for updating a user by ID.
  * Validates the request body and returns a 404 error if the user is not found.
  *
@@ -92,10 +97,7 @@ router.put("/:id", userPut, async (req, res) => {
       return res.status(401).json({ error: "Debes iniciar sesión" });
     }
 
-    const updatedUser = await userService.updateUser(
-      req.params.id,
-      req.body,
-    );
+    const updatedUser = await userService.updateUser(req.params.id, req.body);
 
     res.json(updatedUser);
   } catch (error) {
@@ -111,6 +113,29 @@ router.put("/:id", userPut, async (req, res) => {
   }
 });
 
+//region POST
+/**
+ * Route handler for creating a new user.
+ * Validates the request body before passing it to the service.
+ *
+ * @route POST /user
+ * @param {object} req - The HTTP request object.
+ * @param {object} res - The HTTP response object.
+ */
+router.post("/", userPost, async (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
+  try {
+    const newUser = await userService.createUser(req.body);
+    res.status(201).json(newUser);
+  } catch (error) {
+    res.status(500).json({ error: "Error al crear el usuario" });
+  }
+});
+
+//region DELETE
 /**
  * Route handler for deleting a user by ID.
  * Returns a 404 error if the user does not exist.
@@ -130,29 +155,5 @@ router.delete("/:id", async (req, res) => {
     res.status(500).json({ error: "Error al eliminar el usuario" });
   }
 });
-
-/**
- * Route handler for a bd mssg.
- * Returns a 404 error if the user does not exist.
- *
- * @route GET /user
- */
-router.get('/getCongratsMessages',
-  async function (req, res, next) {
-    // Month validation
-    if (!!req.query.month && +req.query.month < 0 && +req.query.month > 11) req.query.month = null
-
-    // Basic search parameters
-    let search = {
-      attributes: ['full_name'],
-      include: [''],
-    }
-    try {
-      res.send(await getByBirthday(search, req.query.month))
-    } catch (error) {
-      res.status(400).json({ error: "Usuario no encontrado" });
-    }
-  }
-)
 
 module.exports = router;
