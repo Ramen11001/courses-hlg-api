@@ -72,8 +72,7 @@ router.get("/:id", async (req, res) => {
  */
 router.get("/user/:user_id", filterPagination, async (req, res) => {
   try {
-    const whereClause = req.params.user_id ? req.params.user_id : null;
-    const comments = await commentService.getCommentsByUser(whereClause);
+    const comments = await commentService.getCommentsByUser(req.params.user_id ?? null);
 
     res.json(comments);
   } catch (error) {
@@ -86,10 +85,9 @@ router.get("/user/:user_id", filterPagination, async (req, res) => {
  * Get comments for a specific course
  * @route GET /course/:course_id
  */
-router.get("/course/:course_id", filterPagination, async (req, res) => {
+router.get("/courses/:course_id", filterPagination, async (req, res) => {
   try {
-    const whereClause = req.params.course_id ? req.params.course : null;
-    const comments = await commentService.getCommentsByCourse(whereClause);
+    const comments = await commentService.getCommentsByCourse(req.params.course_id ?? null);
 
     res.json(comments);
   } catch (error) {
