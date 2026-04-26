@@ -34,25 +34,20 @@ router.post("/login", async (req, res) => {
   }
 });
 
-/**
- * Registration path: `POST /auth/register`
- * @route POST /auth/register
- * @param {string} firstName - User's first name
- * @param {string} lastName - User's last name
- * @param {string} email - User's email
- * @param {string} password - User's password
- * @returns {Object} token - JWT token and user data if registration is successful
- */
-// En src/routes/auth.js (o donde tengas la ruta)
-router.post("/login", async (req, res) => {
+router.post("/register", async (req, res) => {
   try {
-    const { email, password } = req.body;
-    const result = await authService.login(email, password);
-    res.json(result);
+    const { firstName, lastName, email, password, birthday, phone, entity_type } = req.body;
+
+    if (!firstName || !lastName || !email || !password) {
+      return res.status(400).json({ error: "Todos los campos obligatorios deben estar completos" });
+    }
+
+    const result = await authService.register(firstName, lastName, email, password, birthday, phone, entity_type);
+
+    res.status(201).json(result);
   } catch (error) {
-    console.error("ERROR DETECTADO:", error);
     res.status(error.status || 500).json({
-      error: error.message || "Error interno",
+      error: error.message || "Error interno del servidor",
     });
   }
 });

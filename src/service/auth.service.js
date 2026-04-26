@@ -1,5 +1,6 @@
 const jwt = require("jsonwebtoken");
 const db = require("../models");
+const md5 = require("md5");
 const SECRET_KEY = "secret_key";
 
 /**
@@ -10,8 +11,11 @@ const SECRET_KEY = "secret_key";
  */
 const login = async (email, password) => {
   const user = await db['User'].findOne({ where: { email } });
+  const encryptedPassword = md5(password).toString();
 
-  if (!user || user.password !== password) {
+  const passwordMatches = user.password === encryptedPassword || user.password === password;
+
+  if (!user || !passwordMatches) {
     const error = new Error("Credenciales inválidas");
     error.status = 401;
     throw error;
@@ -24,10 +28,10 @@ const login = async (email, password) => {
       name: user.firstName,
     },
     SECRET_KEY,
-    { expiresIn: "1h" },
+    { expiresIn: "24h" },
   );
 
-  return { token, user: { email: user.email, id: user.id, role: user.role, name: user.firstName, } };
+  return { token, user: { email: user.email, id: user.id, role: user.role, name: user.firstName } };
 };
 
 /**
@@ -38,8 +42,7 @@ const login = async (email, password) => {
  * @param {string} password - User's password
  * @returns {Object} JWT token and user data
  */
-const register = async (firstName, lastName, email, password) => {
-  // Verificar si el usuario ya existe
+const register = async (firstName, lastName, email, password, birthday, phone, entity_type) => {
   const existingUser = await db['User'].findOne({
     where: { email },
   });
@@ -48,13 +51,16 @@ const register = async (firstName, lastName, email, password) => {
     throw new Error("El email ya está registrado");
   }
 
-  // Crear nuevo usuario
-  const newUser = await User.create({
+  const encryptedPassword = md5(password).toString();
+  const newUser = await db['User'].create({
     firstName,
     lastName,
     email,
-    password,
-    role: "user",
+    password: encryptedPassword,
+    birthday,
+    phone,
+    entity_type,
+    role: "USER",
   });
 
   const fullName = `${newUser.firstName} ${newUser.lastName}`.trim();
@@ -69,7 +75,7 @@ const register = async (firstName, lastName, email, password) => {
       role: newUser.role,
     },
     SECRET_KEY,
-    { expiresIn: "1h" },
+    { expiresIn: "24h" },
   );
 
   return {

@@ -4,6 +4,7 @@ const commentService = require("../service/comments.service");
 const {
   commentPost,
   commentPut,
+  commentPostUser,
 } = require("../service/models/validator/comment.validator");
 const { validationResult } = require("express-validator");
 const { filterPagination } = require("../service/query/filter/filter.service");
@@ -80,6 +81,23 @@ router.get("/courses/:course_id", filterPagination, async (req, res) => {
   }
 });
 
+/**
+ * Get comments for a specific user
+ * @route GET /user/:user_id
+ */
+router.get("/user/:user_id", filterPagination, async (req, res) => {
+  try {
+    const comments = await commentService.getCommentsByUser(
+      req.params.user_id ?? null,
+    );
+
+    res.json(comments);
+  } catch (error) {
+    console.error("Error:", error);
+    res.status(500).json({ error: "Error al obtener los comentarios" });
+  }
+});
+
 // region PUT
 /**
  * Route handler for updating a comment by ID.
@@ -119,6 +137,19 @@ router.put("/:id", commentPut, async (req, res) => {
  * @param {object} res - The HTTP response object.
  */
 router.post("/", commentPost, async (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
+  try {
+    const newComment = await commentService.createComment(req.body);
+    res.status(201).json(newComment);
+  } catch (error) {
+    res.status(500).json({ error: "Error al crear el comentario" });
+  }
+});
+
+router.post("/user/:id", commentPostUser, async (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return res.status(400).json({ errors: errors.array() });

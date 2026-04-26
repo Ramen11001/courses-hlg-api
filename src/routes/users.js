@@ -13,6 +13,7 @@ const HttpError = require("http-errors");
 const { User } = require("../models");
 const authService = require("../service/auth.service");
 const SECRET_KEY = authService.SECRET_KEY;
+const authenticate = require("../middleware/authenticate");
 
 //region GET
 
@@ -86,7 +87,7 @@ router.get("/getCongratsMessages", async function (req, res, next) {
  * @param {object} res - The HTTP response object.
  */
 // routes/userRoutes.js
-router.put("/:id", userPut, async (req, res) => {
+router.put("/:id", authenticate, userPut, async (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return res.status(400).json({ errors: errors.array() });

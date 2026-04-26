@@ -1,6 +1,9 @@
+
+
 const express = require("express");
 var router = express.Router();
 const courseService = require("../service/course.service");
+const authenticate = require("../middleware/authenticate");
 const {
   coursePost,
   coursePut,
@@ -77,7 +80,7 @@ router.get("/user/:user_id", async (req, res) => {
  * @param {object} res - The HTTP response object.
  */
 // routes/courseRoutes.js
-router.put("/:id", coursePut, async (req, res) => {
+router.put("/:id",authenticate, coursePut, async (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return res.status(400).json({ errors: errors.array() });
@@ -139,8 +142,12 @@ router.post("/", coursePost, async (req, res) => {
  * @param {object} req - The HTTP request object.
  * @param {object} res - The HTTP response object.
  */
-router.delete("/:id", async (req, res) => {
+router.delete("/:id", authenticate, async (req, res) => {
   try {
+    if (!req.user || !req.user.id) {
+      return res.status(401).json({ error: "Debes iniciar sesión" });
+    }
+
     const deletedCourse = await courseService.deleteCourse(
       req.params.id,
       req.user.id,
@@ -150,6 +157,9 @@ router.delete("/:id", async (req, res) => {
     }
     res.json({ message: "Curso eliminado con éxito" });
   } catch (error) {
+    if (error.message === "No tienes permiso para eliminar este curso") {
+      return res.status(403).json({ error: error.message });
+    }
     res.status(500).json({ error: "Error al eliminar el curso" });
   }
 });
