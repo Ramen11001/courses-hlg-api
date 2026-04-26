@@ -108,13 +108,12 @@ const userPut = [
   
   body("phone")
     .optional()
-    .trim()
-    .custom(uniquePhoneNumbers),
+    .trim(),
+    
   
   body("email")
     .optional()
-    .isEmail().withMessage("Email inválido")
-    .custom(uniqueEmails),
+    .isEmail().withMessage("Email inválido"),
   
   body("password")
     .optional()
