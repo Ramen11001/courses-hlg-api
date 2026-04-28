@@ -17,6 +17,12 @@ module.exports = (sequelize, DataTypes) => {
 
       User.hasMany(models.Notification);
       User.hasOne(models.Role);
+
+      User.hasMany(models.Enrollment, {
+        foreignKey: "user_id",
+        as: "enrollments",
+        onDelete: "CASCADE",
+      });
     }
   }
   User.init(

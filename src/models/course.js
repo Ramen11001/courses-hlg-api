@@ -8,12 +8,21 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: "user_id",
       });
 
-      Course.hasOne(models.Duration);
+      Course.hasOne(models.Duration, {
+        foreignKey: "course_id",
+        as: "duration",
+      });
 
       Course.hasMany(models.Comment, {
         onDelete: "CASCADE",
         foreignKey: "course_id",
         as: "comments",
+      });
+
+      Course.hasMany(models.Enrollment, {
+        foreignKey: "course_id",
+        as: "enrollments",
+        onDelete: "CASCADE",
       });
     }
   }
@@ -68,13 +77,13 @@ module.exports = (sequelize, DataTypes) => {
         defaultValue: "Presencial",
         allowNull: false,
       },
-      level: {
-        type: DataTypes.ENUM("bajo", "medio", "alto"),
-        defaultValue: "medio",
-        allowNull: false,
-      },
+       level: {
+         type: DataTypes.ENUM("bajo", "medio", "alto"),
+         defaultValue: "medio",
+         allowNull: false,
+       },
 
-      user_id: {
+       user_id: {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {

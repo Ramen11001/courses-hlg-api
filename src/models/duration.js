@@ -8,6 +8,10 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
+      Duration.belongsTo(models.Course, {
+        foreignKey: "course_id",
+        onDelete: "CASCADE",
+      });
     }
   }
   Duration.init(
@@ -18,6 +22,14 @@ module.exports = (sequelize, DataTypes) => {
       duration_time: {
         type: DataTypes.STRING,
         allowNull: false,
+      },
+      course_id: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        references: {
+          model: "courses",
+          key: "id",
+        },
       },
     },
     {
