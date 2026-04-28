@@ -19,13 +19,14 @@ const commentPost = [
     .withMessage("El campo rating es obligatorio.")
     .isInt({ min: 1, max: 5 })
     .withMessage('El campo "rating" debe ser un número entre 1 y 5.'),
-  body("user_id")
+body("user_id")
     .notEmpty()
     .withMessage("El campo user_id es obligatorio.")
     .isInt()
     .withMessage("El campo user_id debe ser un número entero válido.")
     .custom(async (value) => {
-      const user = await db["User"].findByPk(value);
+      const userId = parseInt(value, 10);
+      const user = await db["User"].findByPk(userId);
       if (!user) {
         throw new Error("El usuario especificado no existe");
       }
@@ -38,9 +39,23 @@ const commentPost = [
     .isInt()
     .withMessage("El campo course_id debe ser un número entero válido.")
     .custom(async (value) => {
-      const user = await db["Course"].findByPk(value);
+      const courseId = parseInt(value, 10);
+      const user = await db["Course"].findByPk(courseId);
       if (!user) {
         throw new Error("El usuario especificado no existe");
+      }
+    }),
+
+  body("course_id")
+    .notEmpty()
+    .withMessage("El campo course_id es obligatorio.")
+    .isInt()
+    .withMessage("El campo course_id debe ser un número entero válido.")
+    .custom(async (value) => {
+      const courseId = parseInt(value, 10);
+      const course = await db["Course"].findByPk(courseId);
+      if (!course) {
+        throw new Error("El curso especificado no existe");
       }
       return true;
     }),
@@ -66,7 +81,8 @@ const commentPostUser = [
     .isInt()
     .withMessage("El campo user_id debe ser un número entero válido.")
     .custom(async (value) => {
-      const user = await db["User"].findByPk(value);
+      const userId = parseInt(value, 10);
+      const user = await db["User"].findByPk(userId);
       if (!user) {
         throw new Error("El usuario especificado no existe");
       }
@@ -96,7 +112,8 @@ const commentPut = [
     .withMessage("El campo user_id debe ser un número entero válido.")
     .custom(async (value) => {
       if (value) {
-        const user = await db["User"].findByPk(value);
+        const userId = parseInt(value, 10);
+        const user = await db["User"].findByPk(userId);
         if (!user) {
           throw new Error("El usuario especificado no existe");
         }

@@ -29,12 +29,13 @@ const getCommentsById = async (id) => {
  * @returns {Promise<Array>} - List of comments for the user
  */
 const getCommentsByUser = async (user_id) => {
-   const where = !!user_id
-    ? { user_id: user_id }
+  const numericUserId = parseInt(user_id, 10);
+  const where = !!numericUserId && !isNaN(numericUserId)
+    ? { user_id: numericUserId }
     : {};
   return await db['Comment'].findAll({
-    where: { where },
-    
+    where,
+    include: [{ model: db['User'], as: 'user', attributes: ['id', 'firstName', 'lastName'] }],
     order: [["createdAt", "DESC"]],
   });
 };
@@ -45,11 +46,13 @@ const getCommentsByUser = async (user_id) => {
  * @returns {Promise<Array>} - List of comments for the course
  */
 const getCommentsByCourse = async (course_id) => {
-  const where = !!course_id
-    ? { course_id: course_id }
+  const numericCourseId = parseInt(course_id, 10);
+  const where = !!numericCourseId && !isNaN(numericCourseId)
+    ? { course_id: numericCourseId }
     : {};
   return await db['Comment'].findAll({
     where: where,
+    include: [{ model: db['User'], as: 'user', attributes: ['id', 'firstName', 'lastName'] }],
     order: [["createdAt", "DESC"]],
   });
 };

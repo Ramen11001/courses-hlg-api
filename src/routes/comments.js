@@ -87,8 +87,9 @@ router.get("/courses/:course_id", filterPagination, async (req, res) => {
  */
 router.get("/user/:user_id", filterPagination, async (req, res) => {
   try {
+    const userId = parseInt(req.params.user_id, 10);
     const comments = await commentService.getCommentsByUser(
-      req.params.user_id ?? null,
+      isNaN(userId) ? null : userId,
     );
 
     res.json(comments);
