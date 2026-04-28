@@ -11,6 +11,7 @@
     "jsonwebtoken": "^9.0.2",
     "md5": "^2.3.0",
     "morgan": "~1.9.1",
+    "node-cron": "^4.2.1",
     "pg": "^8.14.1",
     "pg-hstore": "^2.3.4",
     "sequelize": "^6.37.7",
@@ -28,7 +29,8 @@
     "db:create": "yarn run sequelize db:create",
     "db:migrate": "yarn run sequelize db:migrate",
     "seed:run": "yarn run sequelize db:seed:all",
-    "db:delete": "yarn sequelize db:drop"
+    "db:delete": "yarn sequelize db:drop",
+    "notify:courses": "node src/scripts/course-notifications.js"
   },
   "name": "courses-hlg-api",
   "version": "1.0.0",

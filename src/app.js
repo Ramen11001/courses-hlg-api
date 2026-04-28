@@ -9,6 +9,9 @@ var usersRouter = require("./routes/users");
 var coursesRouter = require("./routes/courses");
 var commentsRouter = require("./routes/comments"); 
 const authRouter = require("./routes/auth");
+const enrollmentsRouter = require("./routes/enrollments");
+const notificationsRouter = require("./routes/notifications");
+const recommendationsRouter = require("./routes/recommendations");
 var app = express();
 
 // view engine setup
@@ -35,6 +38,9 @@ app.use("/auth", authRouter);
 app.use("/user", usersRouter);
 app.use("/courses", coursesRouter);
 app.use("/comments", commentsRouter);
+app.use("/enrollments", enrollmentsRouter);
+app.use("/notifications", notificationsRouter);
+app.use("/recommendations", recommendationsRouter);
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
   next(createError(404));
