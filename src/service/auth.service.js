@@ -11,11 +11,18 @@ const SECRET_KEY = "secret_key";
  */
 const login = async (email, password) => {
   const user = await db['User'].findOne({ where: { email } });
+
+  if (!user) {
+    const error = new Error("Credenciales inválidas");
+    error.status = 401;
+    throw error;
+  }
+
   const encryptedPassword = md5(password).toString();
 
-  const passwordMatches = user.password === encryptedPassword || user.password === password;
+  const passwordMatches = user.password === encryptedPassword;
 
-  if (!user || !passwordMatches) {
+  if (!passwordMatches) {
     const error = new Error("Credenciales inválidas");
     error.status = 401;
     throw error;
