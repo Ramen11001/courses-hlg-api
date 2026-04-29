@@ -40,19 +40,6 @@ body("user_id")
     .withMessage("El campo course_id debe ser un número entero válido.")
     .custom(async (value) => {
       const courseId = parseInt(value, 10);
-      const user = await db["Course"].findByPk(courseId);
-      if (!user) {
-        throw new Error("El usuario especificado no existe");
-      }
-    }),
-
-  body("course_id")
-    .notEmpty()
-    .withMessage("El campo course_id es obligatorio.")
-    .isInt()
-    .withMessage("El campo course_id debe ser un número entero válido.")
-    .custom(async (value) => {
-      const courseId = parseInt(value, 10);
       const course = await db["Course"].findByPk(courseId);
       if (!course) {
         throw new Error("El curso especificado no existe");
