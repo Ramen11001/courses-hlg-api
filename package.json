@@ -26,10 +26,10 @@
   "scripts": {
     "start": "nodemon ./src/bin/www",
     "sequelize": "sequelize",
-    "db:create": "yarn run sequelize db:create",
-    "db:migrate": "yarn run sequelize db:migrate",
-    "seed:run": "yarn run sequelize db:seed:all",
-    "db:delete": "yarn sequelize db:drop",
+    "db:create": "sequelize db:create",
+    "db:migrate": "sequelize db:migrate",
+    "seed:run": "sequelize db:seed:all",
+    "db:delete": "sequelize db:drop",
     "notify:courses": "node src/scripts/course-notifications.js"
   },
   "name": "courses-hlg-api",
