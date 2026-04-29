@@ -28,45 +28,8 @@ router.get("/", filterPagination, async (req, res) => {
 });
 
 /**
- * Route handler for retrieving a specific comment by ID.
- * Returns a 404 error if the comment is not found.
- *
- * @route GET /comments/:id
- * @param {object} req - The HTTP request object.
- * @param {object} res - The HTTP response object.
- */
-router.get("/:id", async (req, res) => {
-  try {
-    const comment = await commentService.getCommentsById(req.params.id);
-    if (!comment) {
-      return res.status(404).json({ message: "Comentario no encontrado" });
-    }
-    res.json(comment);
-  } catch (error) {
-    res.status(500).json({ error: "Error al obtener el comentario" });
-  }
-});
-
-/**
- * Get comments for a specific user
- * @route GET /comments/user/:user_id
- */
-router.get("/user/:user_id", filterPagination, async (req, res) => {
-  try {
-    const comments = await commentService.getCommentsByUser(
-      req.params.user_id ?? null,
-    );
-
-    res.json(comments);
-  } catch (error) {
-    console.error("Error:", error);
-    res.status(500).json({ error: "Error al obtener los comentarios" });
-  }
-});
-
-/**
  * Get comments for a specific course
- * @route GET /course/:course_id
+ * @route GET /comments/courses/:course_id
  */
 router.get("/courses/:course_id", filterPagination, async (req, res) => {
   try {
@@ -83,7 +46,7 @@ router.get("/courses/:course_id", filterPagination, async (req, res) => {
 
 /**
  * Get comments for a specific user
- * @route GET /user/:user_id
+ * @route GET /comments/user/:user_id
  */
 router.get("/user/:user_id", filterPagination, async (req, res) => {
   try {
@@ -96,6 +59,26 @@ router.get("/user/:user_id", filterPagination, async (req, res) => {
   } catch (error) {
     console.error("Error:", error);
     res.status(500).json({ error: "Error al obtener los comentarios" });
+  }
+});
+
+/**
+ * Route handler for retrieving a specific comment by ID.
+ * Returns a 404 error if the comment is not found.
+ *
+ * @route GET /comments/:id
+ * @param {object} req - The HTTP request object.
+ * @param {object} res - The HTTP response object.
+ */
+router.get("/:id", async (req, res) => {
+  try {
+    const comment = await commentService.getCommentsById(req.params.id);
+    if (!comment) {
+      return res.status(404).json({ message: "Comentario no encontrado" });
+    }
+    res.json(comment);
+  } catch (error) {
+    res.status(500).json({ error: "Error al obtener el comentario" });
   }
 });
 
@@ -150,7 +133,10 @@ router.post("/", commentPost, async (req, res) => {
   }
 });
 
-router.post("/user/:id", commentPostUser, async (req, res) => {
+router.post("/user/:id", (req, res, next) => {
+    req.body.user_id = parseInt(req.params.id, 10);
+    next();
+  }, commentPostUser, async (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return res.status(400).json({ errors: errors.array() });
@@ -159,6 +145,7 @@ router.post("/user/:id", commentPostUser, async (req, res) => {
     const newComment = await commentService.createComment(req.body);
     res.status(201).json(newComment);
   } catch (error) {
+    console.error("Error al crear comentario:", error);
     res.status(500).json({ error: "Error al crear el comentario" });
   }
 });

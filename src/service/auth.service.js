@@ -98,4 +98,32 @@ const register = async (firstName, lastName, email, password, birthday, phone, e
   };
 };
 
-module.exports = { login, register };
+/**
+ * Reset user password directly by email
+ * @param {string} email - User's email
+ * @param {string} newPassword - New password to set
+ * @returns {Object} success status and message
+ */
+const resetPassword = async (email, newPassword) => {
+  if (newPassword.length < 6) {
+    const error = new Error("La contraseña debe tener al menos 6 caracteres");
+    error.status = 400;
+    throw error;
+  }
+
+  const user = await db["User"].findOne({ where: { email } });
+  if (!user) {
+    const error = new Error("No se encontró un usuario con ese email");
+    error.status = 404;
+    throw error;
+  }
+
+  user.password = md5(newPassword).toString();
+  await user.save();
+
+  return {
+    message: "Contraseña actualizada exitosamente. Ya puedes iniciar sesión.",
+  };
+};
+
+module.exports = { login, register, resetPassword };

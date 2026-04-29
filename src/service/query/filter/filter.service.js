@@ -105,11 +105,9 @@ function filterPagination(req, res, next) {
   // Handling relationships using `include`
   if (include) {
     if (Array.isArray(include)) {
-      queryOptions.include = include.map((relation) => {
-        return { association: relation };
-      });
+      queryOptions.include = include;
     } else {
-      queryOptions.include = { association: include };
+      queryOptions.include = [include];
     }
   }
   // Pagination setup
