@@ -1,4 +1,5 @@
 const { body } = require("express-validator");
+const { User, Course } = require("../../../models");
 
 /**
  * Validation rules for creating a new course.
@@ -11,14 +12,16 @@ const coursePost = [
     .withMessage("El campo title es obligatorio.")
     .isString()
     .withMessage("El campo title debe ser una cadena de texto.")
-    .withMessage("El título debe ser texto")
-    .isLength({ min: 5, max: 200 }),
+    .isLength({ min: 5, max: 200 })
+    .withMessage("El título debe tener entre 5 y 200 caracteres"),
+
   body("description")
     .optional()
     .isString()
     .withMessage("El campo description debe ser una cadena de texto.")
     .isLength({ min: 20, max: 1000 })
     .withMessage("La descripción debe tener entre 20 y 1000 caracteres"),
+
   body("study_plan")
     .optional()
     .trim()
@@ -26,6 +29,7 @@ const coursePost = [
     .withMessage("El plan de estudio debe ser texto")
     .isLength({ max: 5000 })
     .withMessage("El plan de estudio no puede exceder los 5000 caracteres"),
+
   body("location")
     .trim()
     .notEmpty()
@@ -34,18 +38,20 @@ const coursePost = [
     .withMessage("La ubicación debe ser texto")
     .isLength({ max: 200 })
     .withMessage("La ubicación no puede exceder los 200 caracteres"),
+
   body("cost")
     .notEmpty()
     .withMessage("El costo es obligatorio")
     .isFloat({ min: 0 })
     .withMessage("El costo debe ser un número positivo")
     .toFloat(),
-  body("tags").optional().isArray(),
-  body("duration").notEmpty().isArray(),
+
   body("certificate")
     .notEmpty()
+    .withMessage("El campo certificate es obligatorio")
     .isBoolean()
     .withMessage("El campo certificate debe ser un boolean."),
+
   body("area")
     .notEmpty()
     .withMessage("El área es obligatoria")
@@ -58,23 +64,36 @@ const coursePost = [
       "Belleza",
       "Artes",
       "Ciencias",
-    ]),
+    ])
+    .withMessage("Área no válida. Debe ser una de las opciones predefinidas"),
+
   body("mode")
     .notEmpty()
-    .withMessage("La modalidad del curso es obligatorio")
+    .withMessage("La modalidad del curso es obligatoria")
     .isIn(["Presencial", "Online", "Híbrida"])
-    .withMessage("La modalidad del curso: Presencial, Online o Híbrida"),
+    .withMessage(
+      "La modalidad del curso debe ser: Presencial, Online o Híbrida",
+    ),
+
   body("level")
     .notEmpty()
     .withMessage("El nivel es obligatorio")
     .isIn(["bajo", "medio", "alto"])
     .withMessage("El nivel debe ser: bajo, medio o alto"),
-  // Foreign Key - CourseSupplier
+
+  // Foreign Key - User (instructor/creador)
   body("user_id")
     .notEmpty()
-    .withMessage("El campo userId es obligatorio.")
+    .withMessage("El campo user_id es obligatorio.")
     .isInt()
-    .withMessage("El campo userId debe ser un número entero válido."),
+    .withMessage("El campo user_id debe ser un número entero válido.")
+    .custom(async (value) => {
+      const user = await User.findByPk(value);
+      if (!user) {
+        throw new Error("El usuario especificado no existe");
+      }
+      return true;
+    }),
 ];
 
 /**
@@ -83,19 +102,20 @@ const coursePost = [
  */
 const coursePut = [
   body("title")
-    .trim()
     .optional()
-    .withMessage("El campo title es obligatorio.")
+    .trim()
     .isString()
     .withMessage("El campo title debe ser una cadena de texto.")
-    .withMessage("El título debe ser texto")
-    .isLength({ min: 5, max: 200 }),
+    .isLength({ min: 5, max: 200 })
+    .withMessage("El título debe tener entre 5 y 200 caracteres"),
+
   body("description")
     .optional()
     .isString()
     .withMessage("El campo description debe ser una cadena de texto.")
     .isLength({ min: 20, max: 1000 })
     .withMessage("La descripción debe tener entre 20 y 1000 caracteres"),
+
   body("study_plan")
     .optional()
     .trim()
@@ -103,29 +123,28 @@ const coursePut = [
     .withMessage("El plan de estudio debe ser texto")
     .isLength({ max: 5000 })
     .withMessage("El plan de estudio no puede exceder los 5000 caracteres"),
+
   body("location")
-    .trim()
     .optional()
-    .withMessage("La ubicación es obligatoria")
+    .trim()
     .isString()
     .withMessage("La ubicación debe ser texto")
     .isLength({ max: 200 })
     .withMessage("La ubicación no puede exceder los 200 caracteres"),
+
   body("cost")
     .optional()
-    .withMessage("El costo es obligatorio")
     .isFloat({ min: 0 })
     .withMessage("El costo debe ser un número positivo")
     .toFloat(),
-  body("tags").optional().isArray(),
-  body("duration").notEmpty().isArray(),
+
   body("certificate")
     .optional()
     .isBoolean()
     .withMessage("El campo certificate debe ser un boolean."),
+
   body("area")
     .optional()
-    .withMessage("El área es obligatoria")
     .isIn([
       "Técnica",
       "Humanidades",
@@ -135,23 +154,35 @@ const coursePut = [
       "Belleza",
       "Artes",
       "Ciencias",
-    ]),
+    ])
+    .withMessage("Área no válida. Debe ser una de las opciones predefinidas"),
+
   body("mode")
     .optional()
-    .withMessage("La modalidad del curso es obligatorio")
     .isIn(["Presencial", "Online", "Híbrida"])
-    .withMessage("La modalidad del curso: Presencial, Online o Híbrida"),
+    .withMessage(
+      "La modalidad del curso debe ser: Presencial, Online o Híbrida",
+    ),
+
   body("level")
     .optional()
-    .withMessage("El nivel es obligatorio")
     .isIn(["bajo", "medio", "alto"])
     .withMessage("El nivel debe ser: bajo, medio o alto"),
-  // Foreign Key - CourseSupplier
+
+  // Foreign Key - User (instructor/creador)
   body("user_id")
     .optional()
-    .withMessage("El campo userId es obligatorio.")
     .isInt()
-    .withMessage("El campo userId debe ser un número entero válido."),
+    .withMessage("El campo user_id debe ser un número entero válido.")
+    .custom(async (value) => {
+      if (value) {
+        const user = await User.findByPk(value);
+        if (!user) {
+          throw new Error("El usuario especificado no existe");
+        }
+      }
+      return true;
+    }),
 ];
 
 module.exports = {

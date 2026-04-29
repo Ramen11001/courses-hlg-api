@@ -8,11 +8,21 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      User.hasOne(models.Comment);
-      User.hasOne(models.Notification);
-      User.hasOne(models.Course);
+      User.hasMany(models.Course, {
+        foreignKey: "user_id",
+      });
+      User.hasMany(models.Comment, {
+        foreignKey: "user_id",
+      });
+
+      User.hasMany(models.Notification);
       User.hasOne(models.Role);
-      User.hasOne(models.Rating);
+
+      User.hasMany(models.Enrollment, {
+        foreignKey: "user_id",
+        as: "enrollments",
+        onDelete: "CASCADE",
+      });
     }
   }
   User.init(
@@ -30,7 +40,7 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
       },
       email: {
-        type: Sequelize.STRING,
+        type: DataTypes.STRING,
         allowNull: false,
         unique: false,
       },
@@ -52,11 +62,14 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.ENUM("privado", "estatal"),
         defaultValue: "estatal",
       },
+      rating: {
+        type: DataTypes.DOUBLE,
+      },
     },
     {
       sequelize,
       modelName: "User",
-      tableName: "user",
+      tableName: "users",
     },
   );
   return User;

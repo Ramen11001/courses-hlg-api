@@ -2,7 +2,7 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable("Courses", {
+    await queryInterface.createTable("courses", {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -11,9 +11,12 @@ module.exports = {
       },
       user_id: {
         allowNull: false,
-        autoIncrement: true,
-        foreignKey: true,
         type: Sequelize.INTEGER,
+        references: {
+          model: "users", // Asegúrate que coincida con tu tabla de Users
+          key: "id",
+        },
+        onDelete: "CASCADE",
       },
       title: {
         type: Sequelize.STRING,
@@ -25,10 +28,11 @@ module.exports = {
       },
       study_plan: {
         type: Sequelize.TEXT,
-        allowNull: false,
+        allowNull: true, // Cambiar a true porque en el modelo no tiene allowNull: false
       },
       location: {
         type: Sequelize.STRING,
+        allowNull: false, // Coincidir con el modelo
       },
       cost: {
         type: Sequelize.DOUBLE,
@@ -37,15 +41,6 @@ module.exports = {
       certificate: {
         type: Sequelize.BOOLEAN,
         defaultValue: false,
-        allowNull: false,
-      },
-      tags: {
-        type: Sequelize.JSON,
-        defaultValue: [],
-      },
-      duration: {
-        type: Sequelize.JSON,
-        defaultValue: [],
         allowNull: false,
       },
       area: {
@@ -82,6 +77,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable("Courses");
+    await queryInterface.dropTable("courses");
   },
 };

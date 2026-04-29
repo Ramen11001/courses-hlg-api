@@ -21,7 +21,6 @@ function filterPagination(req, res, next) {
           { title: { [Op.iLike]: `%${search}%` } },
           { description: { [Op.iLike]: `%${search}%` } },
           { location: { [Op.iLike]: `%${search}%` } },
-          { tags: { [Op.iLike]: `%${search}%` } },
         ],
       };
     }
@@ -33,14 +32,14 @@ function filterPagination(req, res, next) {
   if (req.query.minPrice && !isNaN(req.query.minPrice)) {
     // Add price filter for minimum cost
     priceFilters.push({
-      price: { [Op.gte]: parseFloat(req.query.minPrice) },
+      cost: { [Op.gte]: parseFloat(req.query.minPrice) },
     });
   }
 
   if (req.query.maxPrice && !isNaN(req.query.maxPrice)) {
     // Add price filter for maximum price
     priceFilters.push({
-      price: { [Op.lte]: parseFloat(req.query.maxPrice) },
+      cost: { [Op.lte]: parseFloat(req.query.maxPrice) },
     });
   }
 
