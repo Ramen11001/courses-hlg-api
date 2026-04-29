@@ -2,18 +2,31 @@
 const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
   class Course extends Model {
-    /**
-     * Helper method for defining associations.
-     * This method is not a part of Sequelize lifecycle.
-     * The `models/index` file will call this method automatically.
-     */
     static associate(models) {
       Course.belongsTo(models.User, {
         onDelete: "CASCADE",
         foreignKey: "user_id",
       });
+
+      Course.hasOne(models.Duration, {
+        foreignKey: "course_id",
+        as: "duration",
+      });
+
+      Course.hasMany(models.Comment, {
+        onDelete: "CASCADE",
+        foreignKey: "course_id",
+        as: "comments",
+      });
+
+      Course.hasMany(models.Enrollment, {
+        foreignKey: "course_id",
+        as: "enrollments",
+        onDelete: "CASCADE",
+      });
     }
   }
+
   Course.init(
     {
       title: {
@@ -41,15 +54,6 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.DOUBLE,
         allowNull: false,
       },
-      tags: {
-        type: DataTypes.JSONB,
-        defaultValue: [],
-      },
-      duration: {
-        type: DataTypes.JSONB,
-        defaultValue: [],
-
-      },
       certificate: {
         type: DataTypes.BOOLEAN,
         defaultValue: false,
@@ -73,17 +77,17 @@ module.exports = (sequelize, DataTypes) => {
         defaultValue: "Presencial",
         allowNull: false,
       },
-      level: {
-        type: DataTypes.ENUM("bajo", "medio", "alto"),
-        defaultValue: "medio",
-        allowNull: false,
-      },
-      // (Foreign Keys)
-      user_id: {
+       level: {
+         type: DataTypes.ENUM("bajo", "medio", "alto"),
+         defaultValue: "medio",
+         allowNull: false,
+       },
+
+       user_id: {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
-          model: "User",
+          model: "users",
           key: "id",
         },
       },
@@ -91,7 +95,7 @@ module.exports = (sequelize, DataTypes) => {
     {
       sequelize,
       modelName: "Course",
-      tableName: "course",
+      tableName: "courses",
     },
   );
   return Course;

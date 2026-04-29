@@ -1,16 +1,15 @@
 "use strict";
 const { Model } = require("sequelize");
-
 module.exports = (sequelize, DataTypes) => {
-  class Comment extends Model {
+  class Enrollment extends Model {
     static associate(models) {
-      Comment.belongsTo(models.User, {
+      Enrollment.belongsTo(models.User, {
         foreignKey: "user_id",
         as: "user",
         onDelete: "CASCADE",
       });
 
-      Comment.belongsTo(models.Course, {
+      Enrollment.belongsTo(models.Course, {
         foreignKey: "course_id",
         as: "course",
         onDelete: "CASCADE",
@@ -18,20 +17,8 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
 
-  Comment.init(
+  Enrollment.init(
     {
-      text: {
-        type: DataTypes.STRING,
-        allowNull: false,
-      },
-      rating: {
-        type: DataTypes.DOUBLE,
-        allowNull: false,
-        validate: {
-          min: 1,
-          max: 5,
-        },
-      },
       user_id: {
         type: DataTypes.INTEGER,
         allowNull: false,
@@ -51,10 +38,10 @@ module.exports = (sequelize, DataTypes) => {
     },
     {
       sequelize,
-      modelName: "Comment",
-      tableName: "comments",
+      modelName: "Enrollment",
+      tableName: "enrollments",
     },
   );
 
-  return Comment;
+  return Enrollment;
 };

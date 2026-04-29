@@ -1,48 +1,41 @@
 "use strict";
 const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
-  class Notification extends Model {
+  class Duration extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      Notification.belongsTo(models.User, {
+      Duration.belongsTo(models.Course, {
+        foreignKey: "course_id",
         onDelete: "CASCADE",
-        foreignKey: "user_id",
       });
     }
   }
-  Notification.init(
+  Duration.init(
     {
-      title: {
+      init_date: DataTypes.DATE,
+      end_date: DataTypes.DATE,
+      //EXAMPLE: 12 semanas
+      duration_time: {
         type: DataTypes.STRING,
         allowNull: false,
       },
-      message: {
-        type: DataTypes.STRING,
-        allowNull: false,
-      },
-      viewed: {
-        type: DataTypes.BOOLEAN,
-        defaultValue: false,
-      },
-      // Foreign Keys
-      user_id: {
+      course_id: {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
-          model: "users",
+          model: "courses",
           key: "id",
         },
       },
     },
     {
       sequelize,
-      modelName: "Notification",
-      tableName: "notifications",
+      modelName: "Duration",
     },
   );
-  return Notification;
+  return Duration;
 };
