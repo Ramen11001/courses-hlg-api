@@ -12,6 +12,7 @@ const authRouter = require("./routes/auth");
 const enrollmentsRouter = require("./routes/enrollments");
 const notificationsRouter = require("./routes/notifications");
 const recommendationsRouter = require("./routes/recommendations");
+const requestsRouter = require("./routes/requests");
 var app = express();
 
 // view engine setup
@@ -41,6 +42,7 @@ app.use("/comments", commentsRouter);
 app.use("/enrollments", enrollmentsRouter);
 app.use("/notifications", notificationsRouter);
 app.use("/recommendations", recommendationsRouter);
+app.use("/requests", requestsRouter);
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
   next(createError(404));
