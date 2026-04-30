@@ -23,6 +23,12 @@ module.exports = (sequelize, DataTypes) => {
         as: "enrollments",
         onDelete: "CASCADE",
       });
+
+      User.hasMany(models.Request, {
+        foreignKey: "user_id",
+        as: "requests",
+        onDelete: "CASCADE",
+      });
     }
   }
   User.init(
@@ -64,6 +70,10 @@ module.exports = (sequelize, DataTypes) => {
       },
       rating: {
         type: DataTypes.DOUBLE,
+      },
+      verified: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false,
       },
     },
     {
