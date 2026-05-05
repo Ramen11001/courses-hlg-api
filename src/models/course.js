@@ -84,14 +84,18 @@ module.exports = (sequelize, DataTypes) => {
        },
 
        user_id: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-        references: {
-          model: "users",
-          key: "id",
-        },
-      },
-    },
+         type: DataTypes.INTEGER,
+         allowNull: false,
+         references: {
+           model: "users",
+           key: "id",
+         },
+       },
+       images: {
+         type: DataTypes.JSON,
+         defaultValue: [],
+       },
+     },
     {
       sequelize,
       modelName: "Course",

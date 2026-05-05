@@ -33,13 +33,15 @@ router.post("/login", async (req, res) => {
 
 router.post("/register", async (req, res) => {
   try {
-    const { firstName, lastName, email, password, birthday, phone, entity_type } = req.body;
+    const { firstName, lastName, email, password, birthday, phone, entity_type, images } = req.body;
+
+    console.log('Register route - images in body:', images ? images.length + ' images' : 'no images');
 
     if (!firstName || !lastName || !email || !password) {
       return res.status(400).json({ error: "Todos los campos obligatorios deben estar completos" });
     }
 
-    const result = await authService.register(firstName, lastName, email, password, birthday, phone, entity_type);
+    const result = await authService.register(firstName, lastName, email, password, birthday, phone, entity_type, images);
 
     res.status(201).json(result);
   } catch (error) {

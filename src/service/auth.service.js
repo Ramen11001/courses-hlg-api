@@ -49,7 +49,7 @@ const login = async (email, password) => {
  * @param {string} password - User's password
  * @returns {Object} JWT token and user data
  */
-const register = async (firstName, lastName, email, password, birthday, phone, entity_type) => {
+const register = async (firstName, lastName, email, password, birthday, phone, entity_type, images) => {
   const existingUser = await db['User'].findOne({
     where: { email },
   });
@@ -57,6 +57,8 @@ const register = async (firstName, lastName, email, password, birthday, phone, e
   if (existingUser) {
     throw new Error("El email ya está registrado");
   }
+
+  console.log('Register - images received:', images ? images.length + ' images' : 'no images');
 
   const encryptedPassword = md5(password).toString();
   const newUser = await db['User'].create({
@@ -68,7 +70,10 @@ const register = async (firstName, lastName, email, password, birthday, phone, e
     phone,
     entity_type,
     role: "USER",
+    images: images || [],
   });
+
+  console.log('Register - created user with images:', newUser.images);
 
   const fullName = `${newUser.firstName} ${newUser.lastName}`.trim();
 

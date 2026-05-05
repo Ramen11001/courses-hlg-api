@@ -68,6 +68,10 @@ const userPost = [
   body("entity_type")
     .optional()
     .isIn(["privado", "estatal"]).withMessage("Tipo de entidad debe ser 'privado' o 'estatal'"),
+
+  body("images")
+    .optional()
+    .isArray().withMessage("El campo images debe ser un arreglo de URLs"),
 ];
 
 /**
@@ -131,6 +135,10 @@ const userPut = [
   body("entity_type")
     .optional()
     .isIn(["privado", "estatal"]).withMessage("Tipo de entidad debe ser 'privado' o 'estatal'"),
+
+  body("images")
+    .optional()
+    .isArray().withMessage("El campo images debe ser un arreglo de URLs"),
 ];
 
 async function uniquePhoneNumbers(value) {
