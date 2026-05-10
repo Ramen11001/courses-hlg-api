@@ -7,17 +7,21 @@ const db = require("../models");
  * @returns {Promise<Object>} - The enrollment record
  */
 const enrollInCourse = async (userId, courseId) => {
+  const course = await db['Course'].findByPk(courseId);
+  if (!course) {
+    throw new Error("Curso no encontrado");
+  }
+
+  if (course.user_id === userId) {
+    throw new Error("No puedes inscribirte en tu propio curso");
+  }
+
   const existingEnrollment = await db['Enrollment'].findOne({
     where: { user_id: userId, course_id: courseId },
   });
 
   if (existingEnrollment) {
     throw new Error("Ya estás inscrito en este curso");
-  }
-
-  const course = await db['Course'].findByPk(courseId);
-  if (!course) {
-    throw new Error("Curso no encontrado");
   }
 
   return await db['Enrollment'].create({

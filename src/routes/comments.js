@@ -129,6 +129,9 @@ router.post("/", commentPost, async (req, res) => {
     const newComment = await commentService.createComment(req.body);
     res.status(201).json(newComment);
   } catch (error) {
+    if (error.message === "No puedes comentar tu propio curso") {
+      return res.status(403).json({ error: error.message });
+    }
     res.status(500).json({ error: "Error al crear el comentario" });
   }
 });

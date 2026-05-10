@@ -94,6 +94,11 @@ const coursePost = [
       }
       return true;
     }),
+
+  body("images")
+    .optional()
+    .isArray()
+    .withMessage("El campo images debe ser un arreglo de URLs"),
 ];
 
 /**
@@ -183,6 +188,11 @@ const coursePut = [
       }
       return true;
     }),
+
+  body("images")
+    .optional()
+    .isArray()
+    .withMessage("El campo images debe ser un arreglo de URLs"),
 ];
 
 module.exports = {

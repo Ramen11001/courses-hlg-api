@@ -19,6 +19,9 @@ router.post("/", authenticate, async (req, res) => {
     const enrollment = await enrollmentService.enrollInCourse(user_id, course_id);
     res.status(201).json(enrollment);
   } catch (error) {
+    if (error.message === "No puedes inscribirte en tu propio curso") {
+      return res.status(403).json({ error: error.message });
+    }
     res.status(400).json({ error: error.message });
   }
 });
@@ -63,6 +66,22 @@ router.get("/my-enrollments", authenticate, async (req, res) => {
   try {
     const enrollments = await enrollmentService.getUserEnrollments(req.user.id);
     res.json(enrollments);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+/**
+ * GET /enrollments/enrollment/:courseId
+ * Get enrollment object for a course
+ */
+router.get("/enrollment/:courseId", authenticate, async (req, res) => {
+  try {
+    const enrollment = await enrollmentService.getEnrollmentByUserAndCourse(
+      req.user.id,
+      req.params.courseId,
+    );
+    res.json(enrollment);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

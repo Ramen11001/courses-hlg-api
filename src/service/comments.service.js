@@ -66,6 +66,12 @@ const getCommentsByCourse = async (course_id) => {
  * @returns {Promise<object>} - The newly created comment.
  */
 const createComment = async (data) => {
+  if (data.course_id) {
+    const course = await db['Course'].findByPk(data.course_id);
+    if (course && course.user_id === data.user_id) {
+      throw new Error("No puedes comentar tu propio curso");
+    }
+  }
   return await db['Comment'].create(data);
 };
 
