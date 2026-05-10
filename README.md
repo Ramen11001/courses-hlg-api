@@ -45,7 +45,7 @@ npm install
 - Entonces para correr el proyecto:
 ```bash
 # Start local project instance
-nodemon ./src/bin/wwww
+nodemon ./src/bin/www
 ```
 
 ### Tecnologías Utilizadas
