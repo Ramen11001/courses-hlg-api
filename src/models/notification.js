@@ -9,8 +9,9 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       Notification.belongsTo(models.User, {
-        onDelete: "CASCADE",
         foreignKey: "user_id",
+        as: "user",
+        onDelete: "CASCADE",
       });
     }
   }
@@ -28,7 +29,6 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.BOOLEAN,
         defaultValue: false,
       },
-      // Foreign Keys
       user_id: {
         type: DataTypes.INTEGER,
         allowNull: false,

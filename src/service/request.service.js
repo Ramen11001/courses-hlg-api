@@ -1,4 +1,5 @@
 const db = require("../models");
+const { createNotification } = require("./notification.service");
 
 /**
  * Creates a new request
@@ -99,6 +100,21 @@ const reviewRequest = async (id, status, review_message, reviewed_by) => {
   }
 
   await request.save();
+
+  try {
+    const typeLabel = request.type === "become_teacher" ? "ser profesor" : "verificación";
+    const notifTitle = status === "approved" ? "Solicitud aprobada" : "Solicitud rechazada";
+    const notifMessage = status === "approved"
+      ? `Tu solicitud para ${typeLabel} ha sido aprobada.`
+      : `Tu solicitud para ${typeLabel} ha sido rechazada.${review_message ? ' Motivo: ' + review_message : ''}`;
+    await createNotification(request.user_id, notifTitle, notifMessage);
+  } catch (notifErr) {
+    console.error("============================================");
+    console.error("ERROR creating notification for request review:");
+    console.error(notifErr);
+    console.error("============================================");
+  }
+
   return request;
 };
 
