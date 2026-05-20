@@ -1,4 +1,5 @@
 const db = require("../models");
+const { createNotification } = require("./notification.service");
 
 /**
  * Enroll a user in a course
@@ -24,10 +25,26 @@ const enrollInCourse = async (userId, courseId) => {
     throw new Error("Ya estás inscrito en este curso");
   }
 
-  return await db['Enrollment'].create({
+  const enrollment = await db['Enrollment'].create({
     user_id: userId,
     course_id: courseId,
   });
+
+  let notification = null;
+  try {
+    notification = await createNotification(
+      userId,
+      "Inscripción al curso",
+      `Te has inscrito al curso "${course.title}" exitosamente.`
+    );
+  } catch (notifErr) {
+    console.error("============================================");
+    console.error("ERROR creating notification for enrollment:");
+    console.error(notifErr);
+    console.error("============================================");
+  }
+
+  return { enrollment, notification };
 };
 
 /**
@@ -45,8 +62,27 @@ const cancelEnrollment = async (enrollmentId, userId) => {
     throw new Error("Inscripción no encontrada");
   }
 
+  const course = await db['Course'].findByPk(enrollment.course_id);
+
   await enrollment.destroy();
-  return { message: "Inscripción cancelada exitosamente" };
+
+  let notification = null;
+  if (course) {
+    try {
+      notification = await createNotification(
+        userId,
+        "Inscripción cancelada",
+        `Has cancelado tu inscripción al curso "${course.title}".`
+      );
+    } catch (notifErr) {
+      console.error("============================================");
+      console.error("ERROR creating notification for cancellation:");
+      console.error(notifErr);
+      console.error("============================================");
+    }
+  }
+
+  return { message: "Inscripción cancelada exitosamente", notification };
 };
 
 /**

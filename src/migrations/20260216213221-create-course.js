@@ -13,7 +13,7 @@ module.exports = {
         allowNull: false,
         type: Sequelize.INTEGER,
         references: {
-          model: "users", // Asegúrate que coincida con tu tabla de Users
+          model: "users",
           key: "id",
         },
         onDelete: "CASCADE",
@@ -28,11 +28,11 @@ module.exports = {
       },
       study_plan: {
         type: Sequelize.TEXT,
-        allowNull: true, // Cambiar a true porque en el modelo no tiene allowNull: false
+        allowNull: true,
       },
       location: {
         type: Sequelize.STRING,
-        allowNull: false, // Coincidir con el modelo
+        allowNull: false,
       },
       cost: {
         type: Sequelize.DOUBLE,

@@ -15,7 +15,9 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: "user_id",
       });
 
-      User.hasMany(models.Notification);
+      User.hasMany(models.Notification, {
+        foreignKey: "user_id",
+      });
       User.hasOne(models.Role);
 
       User.hasMany(models.Enrollment, {
