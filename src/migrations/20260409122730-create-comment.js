@@ -17,17 +17,15 @@ module.exports = {
         allowNull: false,
       },
       user_id: {
-        // ← Importante: snake_case
         allowNull: false,
         type: Sequelize.INTEGER,
         references: {
-          model: "users", // ← Asegura que coincida con tu tabla de users
+          model: "users",
           key: "id",
         },
         onDelete: "CASCADE",
       },
       course_id: {
-        // ← Importante: snake_case
         allowNull: false,
         type: Sequelize.INTEGER,
         references: {

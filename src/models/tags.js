@@ -1,7 +1,6 @@
 "use strict";
 const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
-  //TODO: PREGUNTAR CÖMO PONERLO
   class Tag extends Model {
     static associate(models) {
       Tag.belongsTo(models.Course, {
