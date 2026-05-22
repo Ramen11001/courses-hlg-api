@@ -2,15 +2,6 @@ const express = require("express");
 const router = express.Router();
 const authService = require("../service/auth.service");
 
-// region POST
-/**
- * Authentication path: `POST /auth/login`
- * @route POST /auth/login
- * @param {string} email - User's email
- * @param {string} password - User's password
- * @returns {Object} token - JWT token and user data if authentication is successful
- */
-
 router.post("/login", async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -51,22 +42,33 @@ router.post("/register", async (req, res) => {
   }
 });
 
-/**
- * Reset password by email
- * @route POST /auth/reset-password
- */
-router.post("/reset-password", async (req, res) => {
+router.post("/forgot-password", async (req, res) => {
   try {
-    const { email, newPassword } = req.body;
+    const { email } = req.body;
+    if (!email) {
+      return res.status(400).json({ message: "El email es requerido" });
+    }
+    const result = await authService.forgotPassword(email);
+    return res.status(200).json(result);
+  } catch (error) {
+    res.status(error.status || 500).json({
+      message: error.message || "Error al procesar la solicitud",
+    });
+  }
+});
 
-    if (!email || !newPassword) {
+router.post("/reset-password/:token", async (req, res) => {
+  try {
+    const { token } = req.params;
+    const { newPassword } = req.body;
+
+    if (!token || !newPassword) {
       return res.status(400).json({
-        message: "Email y nueva contraseña son requeridos",
+        message: "Token y nueva contraseña son requeridos",
       });
     }
 
-    const result = await authService.resetPassword(email, newPassword);
-
+    const result = await authService.resetPassword(token, newPassword);
     return res.status(200).json(result);
   } catch (error) {
     res.status(error.status || 500).json({

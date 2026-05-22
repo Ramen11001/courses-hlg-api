@@ -1,6 +1,8 @@
+const crypto = require("crypto");
 const jwt = require("jsonwebtoken");
 const db = require("../models");
 const md5 = require("md5");
+const { sendResetPasswordEmail } = require("./email.service");
 const SECRET_KEY = "secret_key";
 
 /**
@@ -77,7 +79,6 @@ const register = async (firstName, lastName, email, password, birthday, phone, e
 
   const fullName = `${newUser.firstName} ${newUser.lastName}`.trim();
 
-  // Generar token para el nuevo usuario
   const token = jwt.sign(
     {
       id: newUser.id,
@@ -104,26 +105,61 @@ const register = async (firstName, lastName, email, password, birthday, phone, e
 };
 
 /**
- * Reset user password directly by email
+ * Send forgot-password email with reset link
  * @param {string} email - User's email
+ * @returns {Object} success message
+ */
+const forgotPassword = async (email) => {
+  const user = await db["User"].findOne({ where: { email } });
+  if (!user) {
+    return { message: "Si el correo existe, recibirás un enlace para restablecer tu contraseña." };
+  }
+
+  const resetToken = crypto.randomBytes(32).toString("hex");
+  const expires = new Date(Date.now() + 3600000); // 1 hour
+
+  user.reset_token = resetToken;
+  user.reset_token_expires = expires;
+  await user.save();
+
+  const resetLink = `http://localhost:4200/reset-password/${resetToken}`;
+  await sendResetPasswordEmail(email, resetLink);
+
+  return { message: "Si el correo existe, recibirás un enlace para restablecer tu contraseña." };
+};
+
+/**
+ * Reset user password using a reset token
+ * @param {string} token - Reset token
  * @param {string} newPassword - New password to set
  * @returns {Object} success status and message
  */
-const resetPassword = async (email, newPassword) => {
+const resetPassword = async (token, newPassword) => {
   if (newPassword.length < 6) {
     const error = new Error("La contraseña debe tener al menos 6 caracteres");
     error.status = 400;
     throw error;
   }
 
-  const user = await db["User"].findOne({ where: { email } });
+  const user = await db["User"].findOne({ where: { reset_token: token } });
   if (!user) {
-    const error = new Error("No se encontró un usuario con ese email");
-    error.status = 404;
+    const error = new Error("Enlace inválido o ya expiró");
+    error.status = 400;
+    throw error;
+  }
+
+  if (new Date() > new Date(user.reset_token_expires)) {
+    user.reset_token = null;
+    user.reset_token_expires = null;
+    await user.save();
+    const error = new Error("El enlace ha expirado. Solicita uno nuevo.");
+    error.status = 400;
     throw error;
   }
 
   user.password = md5(newPassword).toString();
+  user.reset_token = null;
+  user.reset_token_expires = null;
   await user.save();
 
   return {
@@ -131,4 +167,4 @@ const resetPassword = async (email, newPassword) => {
   };
 };
 
-module.exports = { login, register, resetPassword };
+module.exports = { login, register, forgotPassword, resetPassword };
