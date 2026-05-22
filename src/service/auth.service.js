@@ -3,6 +3,7 @@ const jwt = require("jsonwebtoken");
 const db = require("../models");
 const md5 = require("md5");
 const { sendResetPasswordEmail } = require("./email.service");
+require("dotenv").config({ path: require("path").join(__dirname, "..", "..", ".env") });
 const SECRET_KEY = "secret_key";
 
 /**
@@ -122,7 +123,7 @@ const forgotPassword = async (email) => {
   user.reset_token_expires = expires;
   await user.save();
 
-  const resetLink = `http://localhost:4200/reset-password/${resetToken}`;
+  const resetLink = `${process.env.FRONTEND_URL || "http://localhost:4200"}/reset-password/${resetToken}`;
   await sendResetPasswordEmail(email, resetLink);
 
   return { message: "Si el correo existe, recibirás un enlace para restablecer tu contraseña." };

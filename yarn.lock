@@ -1022,6 +1022,11 @@ node-cron@^4.2.1:
   resolved "https://registry.npmjs.org/node-cron/-/node-cron-4.2.1.tgz"
   integrity sha512-lgimEHPE/QDgFlywTd8yTR61ptugX3Qer29efeyWw2rv259HtGBNn1vZVmp8lB9uo9wC0t/AT4iGqXxia+CJFg==
 
+nodemailer@^8.0.7:
+  version "8.0.7"
+  resolved "https://registry.npmjs.org/nodemailer/-/nodemailer-8.0.7.tgz"
+  integrity sha512-pkjE4mkBzQjdJT4/UmlKl3pX0rC9fZmjh7c6C9o7lv66Ac6w9WCnzPzhbPNxwZAzlF4mdq4CSWB5+FbK6FWCow==
+
 nodemon@^3.1.9:
   version "3.1.11"
   resolved "https://registry.npmjs.org/nodemon/-/nodemon-3.1.11.tgz"
