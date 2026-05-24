@@ -36,7 +36,7 @@ module.exports = {
         firstName: "Jorge Alejandro",
         lastName: "Fernández Pérez",
         birthday: new Date("2001-01-11"),
-        email: "solanssenpai@gmail.com",
+        email: "jorge@gmail.com",
         phone: "+53 55-55-99-46",
         password: md5("id33r875frgffk"),
         role: "COURSE_SUPPLIER",
@@ -54,7 +54,7 @@ module.exports = {
         firstName: "Susana",
         lastName: "Hernández Parera",
         birthday: new Date("1971-07-09"),
-        email: "noeliawalker57@gmail.com",
+        email: "susana@gmail.com",
         phone: "+53 54-94-35-44",
         password: md5("advf4t5ggf"),
         role: "COURSE_SUPPLIER",
@@ -100,18 +100,7 @@ module.exports = {
         updatedAt: new Date(),
       },
       //id 6
-      {
-        firstName: "Administrador",
-        lastName: "Administrador",
-        birthday: new Date("2004-03-30"),
-        email: "admin@email.com",
-        phone: "+53 55-55-91-47",
-        password: md5("idrt6d6t6fdfdk"),
-        role: "ADMINISTRADOR",
-        images: JSON.stringify([]),
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      },
+      
     ];
 
     await queryInterface.bulkInsert("users", users);

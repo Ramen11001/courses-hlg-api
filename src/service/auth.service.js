@@ -168,4 +168,67 @@ const resetPassword = async (token, newPassword) => {
   };
 };
 
-module.exports = { login, register, forgotPassword, resetPassword };
+const setupAdmin = async (setupKey, firstName, lastName, email, password) => {
+  const validKey = process.env.SETUP_ADMIN_KEY;
+
+  if (!validKey) {
+    const error = new Error("Error de configuración del servidor");
+    error.status = 500;
+    throw error;
+  }
+
+  if (setupKey !== validKey) {
+    const error = new Error("Clave de configuración inválida");
+    error.status = 403;
+    throw error;
+  }
+
+  const existingAdmin = await db["User"].findOne({ where: { role: "ADMINISTRADOR" } });
+  if (existingAdmin) {
+    const error = new Error("El administrador ya ha sido configurado");
+    error.status = 403;
+    throw error;
+  }
+
+  const existingUser = await db["User"].findOne({ where: { email } });
+  if (existingUser) {
+    throw new Error("El email ya está registrado");
+  }
+
+  const encryptedPassword = md5(password).toString();
+  const newUser = await db["User"].create({
+    firstName,
+    lastName,
+    email,
+    password: encryptedPassword,
+    role: "ADMINISTRADOR",
+    birthday: new Date("2000-01-01"),
+  });
+
+  const fullName = `${newUser.firstName} ${newUser.lastName}`.trim();
+  const token = jwt.sign(
+    {
+      id: newUser.id,
+      email: newUser.email,
+      firstName: newUser.firstName,
+      lastName: newUser.lastName,
+      role: newUser.role,
+    },
+    SECRET_KEY,
+    { expiresIn: "24h" },
+  );
+
+  return {
+    token,
+    user: {
+      id: newUser.id,
+      firstName: newUser.firstName,
+      lastName: newUser.lastName,
+      fullName,
+      email: newUser.email,
+      role: newUser.role,
+    },
+  };
+};
+
+module.exports = { login, register, forgotPassword, resetPassword, setupAdmin };
