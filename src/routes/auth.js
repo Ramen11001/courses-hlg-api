@@ -1,6 +1,25 @@
 const express = require("express");
 const router = express.Router();
 const authService = require("../service/auth.service");
+const rateLimiter = require("../middleware/rateLimiter");
+
+router.post("/setup-admin", rateLimiter(3, 60000), async (req, res) => {
+  try {
+    const { setupKey, firstName, lastName, email, password } = req.body;
+
+    if (!setupKey || !firstName || !lastName || !email || !password) {
+      return res.status(400).json({ error: "Todos los campos son requeridos" });
+    }
+
+    const result = await authService.setupAdmin(setupKey, firstName, lastName, email, password);
+
+    res.status(201).json(result);
+  } catch (error) {
+    res.status(error.status || 500).json({
+      error: error.message || "Error interno del servidor",
+    });
+  }
+});
 
 router.post("/login", async (req, res) => {
   try {
